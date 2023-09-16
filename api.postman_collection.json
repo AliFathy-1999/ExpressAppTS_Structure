@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "bee24f9c-4a03-4ea4-b4d9-0c0ae053b97b",
+		"name": "upload-image-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25778699"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "User Registration API",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Ali",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Ahmed",
+									"type": "text"
+								},
+								{
+									"key": "userName",
+									"value": "aliahmed1999",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "aliahmed1999@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "@iti43OS",
+									"type": "text"
+								},
+								{
+									"key": "pImage",
+									"type": "file",
+									"src": "/home/user/Pictures/362660347_6630553920337034_5714387214045509172_n.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/v1/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/v1/users/64f8668ea1bde34120abbee0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"64f8668ea1bde34120abbee0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Ali Ahmed",
+									"type": "text"
+								},
+								{
+									"key": "pImage",
+									"type": "file",
+									"src": "/home/user/Pictures/docker-container.png",
+									"disabled": true
+								},
+								{
+									"key": "lastName",
+									"value": "Fathi",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/v1/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"JWT_TOKEN\", pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"aliahmed99@gmail.com\",\n    \"password\": \"@iti43OS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/v1/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
