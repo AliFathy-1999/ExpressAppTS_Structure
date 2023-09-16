@@ -1,8 +1,10 @@
 import {  Schema,model } from "mongoose";
-const validator = require('validator');
-const { ApiError } = require("../../lib/index");
-import { IUser, Role } from '../../types/schemasType';
+import validator from "validator"
 import bcryptjs from 'bcryptjs'
+
+
+import { ApiError } from "../../lib";
+import { IUser, Role } from '../../interfaces/user';
 
 
 const schema = new Schema<IUser>({
@@ -94,6 +96,4 @@ schema.pre('save', async function () {
     this.password = await bcryptjs.hash(this.password, 10);
 });
 
-const User = model<IUser>("User",schema)
-
-module.exports = User;
+export default model<IUser>("User",schema)

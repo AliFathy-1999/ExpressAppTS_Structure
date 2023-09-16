@@ -1,5 +1,5 @@
+import usersValidator from "./user";
 
-module.exports = {
-    usersValidator: require('./user'),
-};
-  
+export {
+    usersValidator
+}

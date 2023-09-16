@@ -1,3 +1,5 @@
-module.exports = {
-    userController: require('./users'),
+import userController from './users'
+
+export {
+    userController,
 }

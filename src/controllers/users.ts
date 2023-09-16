@@ -1,15 +1,14 @@
 import { Request, Response , NextFunction } from "express";
-
 import jwt from 'jsonwebtoken'
 import bcryptjs from "bcryptjs"; 
 
-import { IUser } from "../types/schemasType";
+import { IUser } from "../interfaces/user";
 import HttpStatusCode from "../types/http-status-code";
 
-const {ApiError} = require("../lib/index");
-const { removeImage } = require('../middlewares/upload-image')
+import { ApiError } from "../lib";
+import { removeImage } from "../middlewares/upload-image";
 
-const User = require('../DB/models/users')
+import User from "../DB/models/users";
 
 const generateToken = (user:IUser)=>{
     const TOKEN_KEY = process.env.TOKEN_KEY as string
@@ -50,18 +49,16 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const pImage = req.file? req.file.path : undefined;
-    const { params : { id }} = req;  
 
-    const user = await User.findOne({_id:id});
     if(req.file){
+        const user = await User.findOne({_id:req.user._id});
         const imageUrl = user.pImage;
         removeImage(imageUrl) 
     }
-    if(!user) throw new ApiError (`No User with ID ${id}`, HttpStatusCode.BAD_REQUEST);    
     const { firstName , lastName } = req.body;
     
     const updatedUser = await User.findOneAndUpdate(
-        {_id:id},
+        {_id:req.user._id},
         { firstName , lastName , pImage },
         {runValidation: true,new : true},
         );
@@ -86,7 +83,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-export  {
+export default {
     register,
     signIn,
     updateUser,

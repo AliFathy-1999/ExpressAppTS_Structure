@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { Schema, ValidationError } from "joi";
 
-const { ValidationError } = require('joi');
-const { ApiError } = require('../lib/index');
+import { ApiError } from "../lib";
 
 const validate = (schema) => async (req:Request, res:Response, next:NextFunction) => {
   const validationErr = [];

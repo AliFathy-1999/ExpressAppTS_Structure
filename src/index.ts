@@ -1,8 +1,8 @@
-require('dotenv').config();
-const app = require('./app.ts');
-const { PORT } = require('./config/index.ts');
-const port = PORT || 4000;
+import app from './app';
+import config from './config/index'
+const { port } = config.app
 
-app.listen(port, () => {
+
+app.listen( port  || 4000, () => {
   console.log(`Server Running here 👉 http://localhost:${port}`);
 });

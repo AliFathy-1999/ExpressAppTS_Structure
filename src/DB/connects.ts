@@ -1,8 +1,7 @@
 import { Error } from "mongoose";
 import mongoose from "mongoose";
 
-const config = require('../config');
-
+import config from '../config'
 const { db: { username,password,name } } = config;
 
 const maxRetryAttempts = 3;

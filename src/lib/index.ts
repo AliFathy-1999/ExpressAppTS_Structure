@@ -1,10 +1,10 @@
 
-const { handleResponseError } = require('./handlingErrors');
-const { ApiError } = require('./apiError');
-const asyncWrapper = require('./asyncWrapper');
+import { handleResponseError } from "./handlingErrors";
+import { ApiError } from "./apiError";
+import asyncWrapper from "./asyncWrapper";
 
 const trimText = (text:string) => {
     return text.replace(/\s+/g, ' ');
 }
 
-module.exports = { ApiError, asyncWrapper, handleResponseError, trimText };
+export { ApiError, asyncWrapper, handleResponseError, trimText };

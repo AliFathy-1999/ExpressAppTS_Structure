@@ -1,25 +1,30 @@
 
-const { AppError } = require('../lib/index');
 import { Request,Response,NextFunction } from 'express';
 import  jwt from 'jsonwebtoken';
-const User = require('../DB/models/users');
 
+import { ApiError } from '../lib';
+
+import User from '../DB/models/users';
+import HttpStatusCode from '../types/http-status-code';
+import { IUser, Role } from '../interfaces/user';
 
 const verifyToken = async (bearerToken:string) => {
   bearerToken = bearerToken.split(' ')[1];
-  if(!bearerToken) return new AppError('Sign in again', 401); 
+  if(!bearerToken) return new ApiError('Sign in again', HttpStatusCode.UNAUTHORIZED); 
   const decoded = jwt.verify(bearerToken, process.env.TOKEN_KEY);
   const user = await User.findById(decoded.userId);
-  if(!user) return new AppError('un-authenticated', 401); 
+  if(!user) return new ApiError('un-authenticated', HttpStatusCode.UNAUTHORIZED); 
+  console.log(user);
+  
   return user;
 };
 
 const Auth = async (req:Request, res:Response, next:NextFunction) => {
   let bearerToken = req.headers.authorization;
   try {
-    if (!bearerToken) throw new Error('Un-Authenticated');
+    if (!bearerToken) throw new ApiError('Un-Authenticated',HttpStatusCode.FORBIDDEN);
     const result = await verifyToken(bearerToken);
-    req.user = result
+    req.user = result as IUser
     return next();
   } catch (err) {
     next(err);
@@ -29,10 +34,10 @@ const Auth = async (req:Request, res:Response, next:NextFunction) => {
 const userAuth = async (req:Request, res:Response, next:NextFunction) => {
   let bearerToken = req.headers.authorization; 
   try {
-    if (!bearerToken) throw new Error('Un-Authenticated');
+    if (!bearerToken) throw new ApiError('Un-Authenticated',HttpStatusCode.UNAUTHORIZED);
     const result = await verifyToken(bearerToken);
-    if (result.role !== 'USER') throw new AppError('Unauthorized-User', 403);
-    req.user = result
+    if ( result['role'] !== 'USER') throw new ApiError('Unauthorized-User',HttpStatusCode.FORBIDDEN);
+    req.user = result as IUser
     return next();
   } catch (err) {
     next(err);
@@ -42,14 +47,15 @@ const userAuth = async (req:Request, res:Response, next:NextFunction) => {
 const adminAuth = async (req:Request, res:Response, next:NextFunction) => {
   let bearerToken = req.headers.authorization;  
   try {
-    if (!bearerToken) throw new Error('Unauthenticated-User');
+    if (!bearerToken) throw new ApiError('Unauthenticated-User', HttpStatusCode.UNAUTHORIZED);
     const result = await verifyToken(bearerToken);
-    if (result.role !== 'ADMIN') throw new AppError('Unauthorized-User', 403);
-    req.user = result;
+    if ( result['role'] !== "ADMIN") return res.status(403).json({ error: 'Unauthorized access' });
+    // throw new ApiError('Unauthorized-User', HttpStatusCode.FORBIDDEN);
+    req.user = result as IUser;
     return next();
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { userAuth, adminAuth, Auth };
+export { userAuth, adminAuth, Auth };

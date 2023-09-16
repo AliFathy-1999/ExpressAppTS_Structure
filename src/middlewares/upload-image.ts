@@ -1,21 +1,21 @@
 import { Request } from "express";
-import { ApiError } from "../lib/apiError";
-
+import { v2 as cloudinary } from 'cloudinary';
+const { CloudinaryStorage } =  require('multer-storage-cloudinary');
 import multer from 'multer';
+import { ApiError } from "../lib";
 
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const { cloudnairy } = require('../config/index')
+import config  from '../config'
+const { cloudnairy } = config
 const maxFileSizeInBytes = 5 * 1024 * 1024; // 5MB
-const { extractPublicId } = require('cloudinary-build-url')
+import { extractPublicId } from 'cloudinary-build-url';
 // Configuration 
 
 cloudinary.config(cloudnairy);
 
 
-const storage = new CloudinaryStorage({
+const storage  = new CloudinaryStorage({
   cloudinary : cloudinary,
-  params :     {
+  params : {
     folder : 'user-images',
     public_id :  (req:Request, file: multer.File) => {
       const myFileName = `${Date.now()}-${file.originalname.split('.')[0]}`;
@@ -51,4 +51,4 @@ const removeImage = async(url:string) =>{
 }
 
 
-module.exports = { upload, removeImage};
+export { upload, removeImage };

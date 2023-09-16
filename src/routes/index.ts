@@ -1,12 +1,7 @@
-import { Router } from "express";
-
-
-
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction,Router } from 'express';
 
 import userRoutes from './users';
-const { ApiError } =require("../lib/index");
-
+import { ApiError } from '../lib';
 
 const router = Router()
 

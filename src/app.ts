@@ -1,11 +1,10 @@
-import express,{ Application, Request, Response, NextFunction} from "express";
+import express,{ Application } from "express";
 import cors from "cors";
 import  morgan from 'morgan';
 import helmet from 'helmet';
 import sanitizer from 'express-sanitizer';
 import  limiter from './utils/rate-limiter'
-
-const { handleResponseError } = require('./lib/index');
+import {handleResponseError} from './lib/index'
 
 import connectToDB from "./DB/connects";
 import router from './routes/index'
@@ -25,4 +24,4 @@ app.use(sanitizer());
 app.use(router)
 app.use(handleResponseError);
 
-module.exports = app;
+export default app;

@@ -15,4 +15,4 @@ interface DuplicateKeyError extends Error {
   keyValue: string[];
 }
 
-export{  ApiError , DuplicateKeyError};
+export {  ApiError , DuplicateKeyError };

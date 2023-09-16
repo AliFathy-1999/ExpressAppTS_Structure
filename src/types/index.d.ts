@@ -1,4 +1,4 @@
-import  { IUser }  from '../types/schemasType';
+import  { IUser }  from '../interfaces/user';
 import multer from 'multer';
 
 declare global{

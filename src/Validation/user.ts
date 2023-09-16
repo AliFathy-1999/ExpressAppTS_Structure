@@ -58,7 +58,7 @@ const signIn = {
 };
 
 
-module.exports = {
+export default {
     signUp,
     signIn,
-};
+}
