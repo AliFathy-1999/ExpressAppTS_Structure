@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { ApiError, DuplicateKeyError } from './apiError'
+import { errorLog } from '../utils/logger';
 
 
 const handleMogooseValidationError = (err: mongoose.Error.ValidationError | DuplicateKeyError) => {
@@ -15,6 +16,7 @@ export const handleResponseError = (err: any, req: Request, res: Response, next:
   }
   err.status = err.status || 'failed';
   err.statusCode = err.statusCode || 500;
+  errorLog(`${req.method} | ${err.status} | ${err.statusCode} | ${req.protocol} | ${req.originalUrl} | ${err.message}`)
   res.status(err.statusCode).json({ message: err.message, status: err.status });
 };
 

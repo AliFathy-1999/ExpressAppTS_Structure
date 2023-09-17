@@ -9,7 +9,7 @@ import { ApiError } from "../lib";
 import { removeImage } from "../middlewares/upload-image";
 
 import User from "../DB/models/users";
-
+import { infoLog } from "../utils/logger";
 const generateToken = (user:IUser)=>{
     const TOKEN_KEY = process.env.TOKEN_KEY as string
     const token = jwt.sign(
@@ -34,6 +34,7 @@ const signIn = async (req:Request,res:Response,next:NextFunction) => {
         const valid = bcryptjs.compareSync(password, user.password);
         if (!valid)
             throw new ApiError('Invalid Password', HttpStatusCode.UNAUTHORIZED);
+        infoLog(`${req.method} | success | ${HttpStatusCode.OK} | ${req.protocol} | ${req.originalUrl} `)
         res.status(HttpStatusCode.OK).json({status:'success', token: generateToken(user), data : user});        
 }
 const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -41,6 +42,8 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
         const { firstName , lastName, userName , email, password  } = req.body;
         
         const user = await User.create({ firstName , lastName, userName , email, password , pImage })
+        if(user) infoLog(`${req.method} | success | ${HttpStatusCode.CREATED} | ${req.protocol} | ${req.originalUrl}`)
+
         res.status(HttpStatusCode.CREATED).json({
             status: 'success',
             data : user
@@ -60,8 +63,10 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const updatedUser = await User.findOneAndUpdate(
         {_id:req.user._id},
         { firstName , lastName , pImage },
-        {runValidation: true,new : true},
+        {runValidation: true, new : true},
         );
+        if(updatedUser) infoLog(`${req.method} | success | ${HttpStatusCode.OK} | ${req.protocol} | ${req.originalUrl}`)
+
     res.status(HttpStatusCode.OK).json({
         status: 'success',
         data : updatedUser
@@ -77,8 +82,10 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     const imageUrl = user.pImage;
     removeImage(imageUrl) 
 
-    await User.findOneAndDelete({_id:id});
-    res.status(HttpStatusCode.CREATED).json({
+    const deletedUser = await User.findOneAndDelete({_id:id});
+    if(deletedUser) infoLog(`${req.method} | success | ${HttpStatusCode.OK} | ${req.protocol} | ${req.originalUrl}`)
+    
+    res.status(HttpStatusCode.OK).json({
         status: 'success',
     })
 }

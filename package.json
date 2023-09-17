@@ -7,7 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "start": "npx nodemon",
+    "start:dev": "npx nodemon",
+    "start":"NODE_ENV=production ts-node ./src/index.ts",
     "build-docker": "docker build -t nodejs-typescript-app .",
     "docker": "docker run -p 4000:4000 nodejs-typescript-app"
   },
@@ -31,7 +32,8 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
-    "validator": "^13.9.0"
+    "validator": "^13.9.0",
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
