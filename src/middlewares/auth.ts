@@ -14,7 +14,6 @@ const verifyToken = async (bearerToken:string) => {
   const decoded = jwt.verify(bearerToken, process.env.TOKEN_KEY);
   const user = await User.findById(decoded.userId);
   if(!user) return new ApiError('un-authenticated', HttpStatusCode.UNAUTHORIZED); 
-  console.log(user);
   
   return user;
 };
@@ -36,7 +35,7 @@ const userAuth = async (req:Request, res:Response, next:NextFunction) => {
   try {
     if (!bearerToken) throw new ApiError('Un-Authenticated',HttpStatusCode.UNAUTHORIZED);
     const result = await verifyToken(bearerToken);
-    if ( result['role'] !== 'USER') throw new ApiError('Unauthorized-User',HttpStatusCode.FORBIDDEN);
+    if ( result['role'] !== 'user') throw new ApiError('Unauthorized-User',HttpStatusCode.FORBIDDEN);
     req.user = result as IUser
     return next();
   } catch (err) {
@@ -49,8 +48,7 @@ const adminAuth = async (req:Request, res:Response, next:NextFunction) => {
   try {
     if (!bearerToken) throw new ApiError('Unauthenticated-User', HttpStatusCode.UNAUTHORIZED);
     const result = await verifyToken(bearerToken);
-    if ( result['role'] !== "ADMIN") return res.status(403).json({ error: 'Unauthorized access' });
-    // throw new ApiError('Unauthorized-User', HttpStatusCode.FORBIDDEN);
+    if ( result['role'] !== "admin") return res.status(HttpStatusCode.FORBIDDEN).json({ error: 'Unauthorized access' });
     req.user = result as IUser;
     return next();
   } catch (err) {

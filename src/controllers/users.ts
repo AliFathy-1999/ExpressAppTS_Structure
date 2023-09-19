@@ -39,15 +39,15 @@ const signIn = async (req:Request,res:Response,next:NextFunction) => {
 }
 const register = async (req: Request, res: Response, next: NextFunction) => {
         const pImage = req.file? req.file.path : undefined    
-        const { firstName , lastName, userName , email, password  } = req.body;
+        const { firstName , lastName, userName , email, password, role  } = req.body;
         
-        const user = await User.create({ firstName , lastName, userName , email, password , pImage })
+        const user = await User.create({ firstName , lastName, userName , email, password , pImage, role })
         if(user) infoLog(`${req.method} | success | ${HttpStatusCode.CREATED} | ${req.protocol} | ${req.originalUrl}`)
 
         res.status(HttpStatusCode.CREATED).json({
             status: 'success',
             data : user
-        })
+})
 }
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {

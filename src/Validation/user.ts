@@ -46,7 +46,8 @@ const signUp = {
         .string()
         .messages({
             'string.empty': 'Profile Image is a required field',
-        }) 
+        }) ,
+        role : Joi.string().valid('admin', 'user').default('admin'),
     }),
 }
 
