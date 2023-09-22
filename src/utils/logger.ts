@@ -6,9 +6,13 @@ const { app: { environment } } = config;
 
 const logger = createLogger({
     level: "info",
+    defaultMeta: { component: 'user-service' },
     format: printf((info) => {
-        let message = `${new Date().toLocaleString()} |  ${info.level.toUpperCase()} | ${environment} | ${ info.message }  `;
-            return message;
+        let message = `At ${new Date().toLocaleString()} | ${info.message}`;
+        if(info.level === "error") return message; 
+        message  = `${new Date().toLocaleString()} |  ${info.level.toUpperCase()} | ${environment} | ${ info.message }`
+        
+        return message;
         }),
         transports: [
             new transports.File({
@@ -21,10 +25,10 @@ const logger = createLogger({
         ],
 })
 
-const infoLog = async (message: string) => {
+const infoLogger = async (message: string) => {
     logger.log("info", message);
 }
-const errorLog = async (message: string) => {
+const errorLogger = async (message: string) => {
         logger.log("error", message);
 }
 if (environment !== 'production') {
@@ -35,4 +39,4 @@ if (environment !== 'production') {
 }
 
 
-export { infoLog , errorLog };
+export { infoLogger , errorLogger };

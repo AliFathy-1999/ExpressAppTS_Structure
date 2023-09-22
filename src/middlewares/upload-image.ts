@@ -5,9 +5,13 @@ import multer from 'multer';
 import { ApiError } from "../lib";
 
 import config  from '../config'
-const { cloudnairy } = config
-const maxFileSizeInBytes = 5 * 1024 * 1024; // 5MB
+const { 
+  cloudnairy,
+  uploadedFile: { allowedFileExtension, maxFileSize }
+} = config
+
 import { extractPublicId } from 'cloudinary-build-url';
+import path from "path";
 // Configuration 
 
 cloudinary.config(cloudnairy);
@@ -30,7 +34,8 @@ const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError 
   if (file.mimetype.split("/")[0] !== "image") {
       return callback(new ApiError('Only images are allowed', 400), null);
     }
-  // if (!['png', 'jpg', 'jpeg'].includes(file.mimetype.split('/')[1])) {
+    
+  // if (!allowedFileExtension.includes(path.extname(file.originalname))) {
   //     return callback(new ApiError('Only images are allowed', 400), null);
   //   }
     return callback(null, true);  
@@ -38,7 +43,7 @@ const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError 
 const upload = multer({
   storage,
   limits : {
-    fileSize : maxFileSizeInBytes, // 5MB
+    fileSize : maxFileSize,
   },
 
   fileFilter 

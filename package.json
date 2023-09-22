@@ -11,7 +11,7 @@
     "start": "NODE_ENV=production ts-node ./src/index.ts",
     "build-docker": "docker build -t nodejs-typescript-app .",
     "docker": "docker run -p 4000:4000 nodejs-typescript-app",
-    "killer": "fuser -k 4000/tcp"
+    "killer": "fuser -k 4000/tcp && npm run start:dev"
   },
   "keywords": [],
   "author": "",
