@@ -12,6 +12,7 @@ const swaggerUi = require('swagger-ui-express');
 import connectToDB from "./DB/connects";
 import router from './routes/index'
 import HttpStatusCode from "./types/http-status-code";
+import errorMsg from "./utils/errorMsg";
 
 const app :Application = express();
 //Run MongoDB server
@@ -25,14 +26,16 @@ app.use(helmet());
 app.use(limiter);
 app.use(sanitizer());
 
-app.use(router)
-app.use(handleResponseError);
-
+app.use(router);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all('*',async (req:Request, res:Response,next:NextFunction) => {
-    next(new ApiError(`Can't find ${req.originalUrl} on this server`, HttpStatusCode.NOT_FOUND));
+    next(new ApiError(errorMsg.RouteNotFound(req.originalUrl), HttpStatusCode.NOT_FOUND));
 })
+
+app.use(handleResponseError);
+
+
 
 
 export default app;

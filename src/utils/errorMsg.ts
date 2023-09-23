@@ -6,6 +6,10 @@ const errorMsg = {
     DuplicatedKey: (err: DuplicateKeyError) : string => `Value of field ${Object.keys(err.keyValue)[0]} is Duplicated please choose another one`,
     IncorrectField: (field:string) : string => `Incorrect ${field}, please try again`,
     NotFound: (model:string,field:string) : string => `No ${model} with ID ${field}`,
+    RouteNotFound: (route:string) : string => `Can't find ${route} on this server`,
+    mongoConnection: (error:Error) : string => `MongoDB connection error: ${error.message}`,
+    AllowedFile: (extensions:string) : string => `Allowed file extensions are ${extensions}`,
+    ImageOnly: 'Only images are allowed',
     customMsg: (msg:string) => msg
 }
 export default errorMsg;

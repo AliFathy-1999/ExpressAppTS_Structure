@@ -12,6 +12,8 @@ const {
 
 import { extractPublicId } from 'cloudinary-build-url';
 import path from "path";
+import HttpStatusCode from "../types/http-status-code";
+import errorMsg from "../utils/errorMsg";
 // Configuration 
 
 cloudinary.config(cloudnairy);
@@ -22,7 +24,8 @@ const storage  = new CloudinaryStorage({
   params : {
     folder : 'user-images',
     public_id :  (req:Request, file: multer.File) => {
-      const myFileName = `${Date.now()}-${file.originalname.split('.')[0]}`;
+      const fileName = path.basename(file.originalname);
+      const myFileName = `${Date.now()}-${fileName}`;
       return myFileName;
     },
     },
@@ -32,7 +35,7 @@ const storage  = new CloudinaryStorage({
 const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
 
   if (file.mimetype.split("/")[0] !== "image") {
-      return callback(new ApiError('Only images are allowed', 400), null);
+      return callback(new ApiError(errorMsg.ImageOnly, HttpStatusCode.BAD_REQUEST), null);
     }
     
   // if (!allowedFileExtension.includes(path.extname(file.originalname))) {

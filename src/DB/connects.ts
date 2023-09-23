@@ -2,6 +2,7 @@ import { Error } from "mongoose";
 import mongoose from "mongoose";
 
 import config from '../config'
+import errorMsg from "../utils/errorMsg";
 const { db: { url },app: { environment } } = config;
 
 const maxRetryAttempts = 3;
@@ -15,7 +16,7 @@ const MongoUrl = environment === 'production' ? url : 'mongodb://localhost:27017
             console.log(db_conn_message);
         })
         .catch((error:Error) => {
-        console.error(`MongoDB connection error: ${error.message}`);
+        console.error(errorMsg.mongoConnection(error));
         retryAttempts++;
         if (retryAttempts < maxRetryAttempts) {
           console.log(`Retrying connection attempt ${retryAttempts} in ${retryDelayMs} ms`);
