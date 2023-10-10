@@ -3,17 +3,18 @@ import mongoose from "mongoose";
 
 import config from '../config'
 import errorMsg from "../utils/errorMsg";
-const { db: { url },app: { environment } } = config;
+const { 
+  db: { url, conn_message }
+} = config;
 
 const maxRetryAttempts = 3;
 const retryDelayMs = 3000;
 let retryAttempts = 0;
-let db_conn_message  = environment === 'production' ? `MongoDB Atlas connected successfully`: `MongoDB Local connected successfully` ;
-const MongoUrl = environment === 'production' ? url : 'mongodb://localhost:27017/ecommerce-app' 
+
   function connectToDB() {
-    mongoose.connect(MongoUrl)
+    mongoose.connect(url)
         .then(() => {
-            console.log(db_conn_message);
+            console.log(conn_message);
         })
         .catch((error:Error) => {
         console.error(errorMsg.mongoConnection(error));

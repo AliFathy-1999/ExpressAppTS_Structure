@@ -2,7 +2,7 @@ import { Request, Response , NextFunction } from "express";
 import jwt from 'jsonwebtoken'
 import bcryptjs from "bcryptjs"; 
 
-import { IUser } from "../interfaces/user";
+import { IUser, ORDER } from "../interfaces/user";
 import HttpStatusCode from "../types/http-status-code";
 
 import { ApiError } from "../lib";
@@ -12,6 +12,8 @@ import User from "../DB/models/users";
 import { infoLogger } from "../utils/logger";
 import successMsg from "../utils/successMsg";
 import errorMsg from "../utils/errorMsg";
+
+import fetchDataUtils from "../utils/fetch-data-utils";
 
 const generateToken = (user:IUser)=>{
     const TOKEN_KEY = process.env.TOKEN_KEY as string
@@ -102,9 +104,31 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
+const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { query : { page , limit, sort } } = req;
+    const users =  User.find({})
+    
+    const fetchData = new fetchDataUtils(users, req.query);
+    fetchData.sort().paginate();
+    const results = await fetchData.query;
+    
+    res.status(HttpStatusCode.OK).json({
+        status: 'success',
+        message : successMsg.get('Users'),
+        data:{
+            page : +fetchData.page,
+            limit : +fetchData.limit,
+            totalDocs : fetchData.totalDocs,
+            totalPages:fetchData.totalPages,            
+            users : results
+        },
+
+    })
+}
 export default {
     register,
     signIn,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUsers
 }

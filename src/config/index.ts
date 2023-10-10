@@ -6,6 +6,7 @@ const {
     NODE_ENV,ALLOWED_FILE_EXTENSIONS
 } = process.env;
 
+const localMongoURL = 'mongodb://localhost:27017/ecommerce-app';
 
 const config = {
     app: {
@@ -13,7 +14,8 @@ const config = {
         environment : NODE_ENV || 'development',
     },
     db: {
-        url: DB_URL
+        url: NODE_ENV === 'production' ? DB_URL : localMongoURL,
+        conn_message: NODE_ENV === 'production' ? 'MongoDB Atlas connected successfully' : 'MongoDB Local connected successfully',
         // username: DB_USERNAME,
         // password: DB_PASSWORD,
         // name: DB_NAME,

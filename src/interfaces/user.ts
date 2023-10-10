@@ -5,6 +5,11 @@ enum Role {
   USER = 'user',
 }
 
+enum ORDER {
+  ASC = 1,
+  DESC = -1,
+}
+
   interface IUser extends Document{
       _id: ObjectId;
       firstName: string;
@@ -19,4 +24,4 @@ enum Role {
 
 
 
-export { IUser, Role }
+export { IUser, Role, ORDER }
