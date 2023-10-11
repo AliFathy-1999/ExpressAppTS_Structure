@@ -12,7 +12,7 @@ import { fileFilter } from './index';
 import config  from '../../config'
 import path from 'path';
 
-const { cloudinaryConfig } = config
+const { cloudinaryConfig, uploadedFile : { limits } } = config
 // Configure Cloudinary
 cloudinary.config(cloudinaryConfig);
 
@@ -34,7 +34,8 @@ const storage = new CloudinaryStorage({
 // Export the multer upload middleware configured for Cloudinary
 const cloudinaryFileUpload = multer({
   storage,
-  fileFilter
+  fileFilter,
+  limits
 });
 
 const removeImage = async(url:string) =>{

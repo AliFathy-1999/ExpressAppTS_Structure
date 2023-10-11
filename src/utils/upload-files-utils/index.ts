@@ -7,20 +7,25 @@ import { ApiError } from '../../lib';
 import errorMsg from '../errorMsg';
 import HttpStatusCode from '../../types/http-status-code';
 import config from '../../config';
-const { uploadFileStatus: { type } } = config
+import path from 'path';
+const { 
+    uploadFileStatus: { type } ,
+    uploadedFile : { allowedFileExtension }
+} = config
 
 
 const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
   const fileType = file.mimetype.split("/")[0]
   const mediaTypeName = file.mimetype.split("/")[1]
-
-  if ( fileType !== "image" ) {
-      return callback(new ApiError(errorMsg.ImageOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
-    }
-    
-  // if (!allowedFileExtension.includes(path.extname(file.originalname))) {
-  //     return callback(new ApiError('Only images are allowed', 400), null);
+  console.log(mediaTypeName);
+  
+  // if ( fileType !== "image" || mediaTypeName !== "pdf") {
+  //     return callback(new ApiError(errorMsg.ImageOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
   //   }
+    
+  if (!allowedFileExtension.includes(path.extname(file.originalname))) {
+      return callback(new ApiError('Only images are allowed', 400), null);
+    }
     return callback(null, true);  
   }
 

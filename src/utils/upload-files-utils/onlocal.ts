@@ -1,10 +1,15 @@
 // localFileUpload.ts
 import { Request } from 'express';
 import multer, { diskStorage } from 'multer';
-import { fileFilter } from './index';
 import path from 'path';
 import * as crypto from 'crypto';
-
+import config from '../../config';
+import { ApiError } from '../../lib';
+import errorMsg from '../errorMsg';
+import HttpStatusCode from '../../types/http-status-code';
+const { 
+  uploadedFile : { allowedFileExtension ,limits }
+} = config
 const uploadsFolderPath = path.join(__dirname, '../../../uploads');
 const imagesFolderPath = path.join(uploadsFolderPath, '/uploaded-images');
 const pdfsFolderPath = path.join(uploadsFolderPath, '/uploaded-pdfs');
@@ -29,10 +34,26 @@ const storage = diskStorage({
   filename: renameFilename,
 });
 
+const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
+  const fileType = file.mimetype.split("/")[0]
+  const mediaTypeName = file.mimetype.split("/")[1]
+  const fileExtension = path.extname(file.originalname);
+  
+  // if ( fileType !== "image" && mediaTypeName !== "pdf") {
+  //     return callback(new ApiError(errorMsg.ImageOrPdfOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
+  //   }
+    
+  if (!allowedFileExtension.includes(fileExtension)) {
+      return callback(new ApiError(errorMsg.ImageOrPdfOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
+    }
+    return callback(null, true);  
+  }
+  
 // Export the multer upload middleware configured for local storage
 const localFileUpload = multer({
   storage,
-  fileFilter
+  fileFilter,
+  limits
 });
 
 export default localFileUpload;

@@ -48,6 +48,8 @@ const signIn = async (req:Request,res:Response,next:NextFunction) => {
         });        
 }
 const register = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.file);
+    
         const pImage = req.file? req.file.path : undefined    
         const { firstName , lastName, userName , email, password, role  } = req.body;
         

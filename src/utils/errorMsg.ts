@@ -9,7 +9,7 @@ const errorMsg = {
     RouteNotFound: (route:string) : string => `Can't find ${route} on this server`,
     mongoConnection: (error:Error) : string => `MongoDB connection error: ${error.message}`,
     AllowedFile: (extensions:string) : string => `Allowed file extensions are ${extensions}`,
-    ImageOnly: 'Only images are allowed',
+    ImageOrPdfOnly: 'Only images and pdfs are allowed',
     customMsg: (msg:string) => msg
 }
 export default errorMsg;

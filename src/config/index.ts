@@ -26,7 +26,9 @@ const config = {
         api_secret: CLOUDNAIRY_API_SECRET,
     },
     uploadedFile:{
-        maxFileSize : +MAX_FILE_SIZE,
+        limits: {
+            fileSize: Number(MAX_FILE_SIZE) * 1024 * 1024
+        },
         allowedFileExtension : ALLOWED_FILE_EXTENSIONS,
     },
 };
