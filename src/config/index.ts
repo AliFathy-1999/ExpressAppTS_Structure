@@ -16,11 +16,11 @@ const config = {
     db: {
         url: NODE_ENV === 'production' ? DB_URL : localMongoURL,
         conn_message: NODE_ENV === 'production' ? 'MongoDB Atlas connected successfully' : 'MongoDB Local connected successfully',
-        // username: DB_USERNAME,
-        // password: DB_PASSWORD,
-        // name: DB_NAME,
     },
-    cloudnairy: {
+    uploadFileStatus: {
+        type: NODE_ENV === 'production' ? 'multer-cloudinary' : 'multer-local',
+    },
+    cloudinaryConfig: {
         cloud_name: CLOUDNAIRY_CLOUD_NAME,
         api_key: CLOUDNAIRY_API_KEY,
         api_secret: CLOUDNAIRY_API_SECRET,

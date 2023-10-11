@@ -7,7 +7,8 @@ import { Auth, adminAuth } from "../middlewares/auth";
 import { asyncWrapper } from "../lib";
 
 import { userController } from "../controllers";
-import { upload } from "../middlewares/upload-image"
+// import { upload } from "../middlewares/upload-image";
+import { upload } from "../utils/upload-files-utils";
 const router = Router()
 
 router.post('/register',upload.single("pImage"), validate(usersValidator.signUp) ,asyncWrapper(userController.register))

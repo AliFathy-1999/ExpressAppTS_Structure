@@ -43,9 +43,9 @@ const signUp = {
             'string.pattern.base': 'Password must contain at least one number , Capital letter and one special character',
         }),
         pImage: Joi
-        .string()
+        .any()
         .messages({
-            'string.empty': 'Profile Image is a required field',
+            'any.empty': 'Profile Image is a required field',
         }) ,
         role : Joi.string().valid('admin', 'user').default('admin'),
     }),

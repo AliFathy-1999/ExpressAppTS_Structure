@@ -6,7 +6,7 @@ import { IUser, ORDER } from "../interfaces/user";
 import HttpStatusCode from "../types/http-status-code";
 
 import { ApiError } from "../lib";
-import { removeImage } from "../middlewares/upload-image";
+import { removeImage } from "../utils/upload-files-utils/oncloud";
 
 import User from "../DB/models/users";
 import { infoLogger } from "../utils/logger";
