@@ -24,7 +24,6 @@ const filesDestination = (req: Request, file: Express.Multer['File'], callback: 
 
 const renameFilename = async (req: Request, file: Express.Multer['File'], callback: (error: Error | null, destination: string) => void) => {
   let fileExtension = path.extname(file.originalname);
-  
   const randomImageName = crypto.randomUUID() + fileExtension;
   callback(null, randomImageName);
 };

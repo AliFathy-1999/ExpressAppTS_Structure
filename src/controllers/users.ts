@@ -47,10 +47,8 @@ const signIn = async (req:Request,res:Response,next:NextFunction) => {
             data : user,
         });        
 }
-const register = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.file);
-    
-        const pImage = req.file? req.file.path : undefined    
+const register = async (req: Request, res: Response, next: NextFunction) => {    
+        const pImage = req.file? req.file.filename : undefined    
         const { firstName , lastName, userName , email, password, role  } = req.body;
         
         const user = await User.create({ firstName , lastName, userName , email, password , pImage, role })
