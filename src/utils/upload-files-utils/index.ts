@@ -14,7 +14,7 @@ const {
 } = config
 
 
-const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
+const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
   const fileType = file.mimetype.split("/")[0]
   const mediaTypeName = file.mimetype.split("/")[1]
   console.log(mediaTypeName);
@@ -32,6 +32,8 @@ const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError 
 // Use the selected upload middleware
 const uploadStatus = type === 'multer-cloudinary' ? cloudinaryFileUpload : localFileUpload;
 
-const upload = uploadStatus; // Adjust the field name as needed
+// const upload = uploadStatus.single("pImage"); 
+
+const upload = uploadStatus.array('pImage', 4)
 
 export { upload, fileFilter } ;

@@ -1,6 +1,6 @@
 // localFileUpload.ts
 import { Request } from 'express';
-import multer, { diskStorage } from 'multer';
+import multer, { Multer, diskStorage } from 'multer';
 import path from 'path';
 import * as crypto from 'crypto';
 import config from '../../config';
@@ -33,7 +33,7 @@ const storage = diskStorage({
   filename: renameFilename,
 });
 
-const fileFilter = (req:Request, file : multer.File, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
+const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
   const fileType = file.mimetype.split("/")[0]
   const mediaTypeName = file.mimetype.split("/")[1]
   const fileExtension = path.extname(file.originalname);

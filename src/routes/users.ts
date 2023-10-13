@@ -11,10 +11,10 @@ import { userController } from "../controllers";
 import { upload } from "../utils/upload-files-utils";
 const router = Router()
 
-router.post('/register',upload.single("pImage"), validate(usersValidator.signUp) ,asyncWrapper(userController.register))
+router.post('/register',upload, validate(usersValidator.signUp) ,asyncWrapper(userController.register))
 router.post('/login', validate(usersValidator.signIn) ,asyncWrapper(userController.signIn))
 router.delete('/:id' , adminAuth, asyncWrapper(userController.deleteUser))
-router.patch('/', Auth , upload.single("pImage"), validate(usersValidator.signUp) ,asyncWrapper(userController.updateUser))
+router.patch('/', Auth , upload, validate(usersValidator.signUp) ,asyncWrapper(userController.updateUser))
 router.get('/',asyncWrapper(userController.getUsers))
 
 

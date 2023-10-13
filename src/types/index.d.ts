@@ -1,14 +1,16 @@
 import  { IUser }  from '../interfaces/user';
-import multer from 'multer';
+import multer,{Field, Multer} from 'multer';
 
 declare global{
     namespace Express {
         interface Request {
             user?: IUser | undefined,
-            file?:multer.File
+            file?:Multer.File,
+            files?: {[fieldname: string]: Multer.File[]} | Multer.File[],
         }
         interface Multer {
-            File: multer.File
+            File: Multer.File,
+            files?: {[fieldname: string]: Multer.File[]} | Multer.File[],
         }
     }
     

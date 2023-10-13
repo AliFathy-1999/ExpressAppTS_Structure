@@ -6,19 +6,16 @@ class fetchDataUtils {
     projection:string = '';
     query:Query<Document,any>;
     queryString:{[k:string]:any};
-    page:number = 0;
-    limit:number = 5;
+    page:number;
+    limit:number;
     totalPages:number;
     totalDocs:number;
     constructor(query:Query<Document,any>, queryString:{[k:string]:any}) {
         this.query = query;  
         this.queryString = queryString;
-        this.page = queryString.page;
-        this.limit = queryString.limit;
+        this.page = queryString.page || 1;
+        this.limit = queryString.limit || 5;
       }
-    filter(){
-        return this.query.select(this.projection);
-    }
     sort(){
         const sortedBy = this.queryString.sort?.split(',').join(' ');
         if (sortedBy) this.query = this.query.sort(sortedBy);
@@ -26,7 +23,7 @@ class fetchDataUtils {
         return this;
      }
 
-    async paginate() {
+    async paginate() {        
         const skip = this.page * this.limit;
         this.query.skip(skip).limit(this.limit);
         // Get a copy of the query
@@ -35,8 +32,12 @@ class fetchDataUtils {
         this.totalPages = Math.ceil(this.totalDocs / this.limit);
         return this;
     }
-
-    
+    selection(){
+        const { select } = this.queryString
+        this.projection = select?.split(',').join(' ');
+        this.query.select(this.projection);
+        return this;
+    }
 }
 
 export default fetchDataUtils;

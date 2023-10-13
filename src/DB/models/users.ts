@@ -65,10 +65,10 @@ const schema = new Schema<IUser>({
         }
       },
     },
-    pImage: {
+    pImage: [{
       type: String,
       default: 'https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png',
-    },
+    }],
     verified:{
       type:Boolean,
       default: false,
