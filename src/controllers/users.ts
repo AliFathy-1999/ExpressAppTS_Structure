@@ -1,5 +1,4 @@
 import { Request, Response , NextFunction } from "express";
-import jwt from 'jsonwebtoken'
 import bcryptjs from "bcryptjs"; 
 
 import { IUser, ORDER } from "../interfaces/user";
@@ -15,7 +14,6 @@ import errorMsg from "../utils/errorMsg";
 
 import fetchDataUtils from "../utils/fetch-data-utils";
 import { generateToken } from "../utils/utils-functions";
-import IFiles from "../interfaces/file";
 
 
 

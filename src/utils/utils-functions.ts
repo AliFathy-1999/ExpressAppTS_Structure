@@ -29,9 +29,13 @@ const generateOTP = (noOfDigits: number) => {
     return OTP;
 }
 
+const trimText = (text:string) => {
+    return text.replace(/\s+/g, ' ');
+}
 
 export {
     hashText,
     generateToken,
     generateOTP,
+    trimText
 }

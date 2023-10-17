@@ -1,16 +1,33 @@
 version: '3'
+
+networks:
+    app-tier:
+      driver: bridge
+
 services:
-  mongo-server:
-    image: mongo:latest
-    container_name: mongo-server
-    # ports:
-    #   - "27017:27017" # Map MongoDB port to the host
   node-app:
+    networks:
+      - app-tier
     restart: on-failure
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
-      - "4000:4000"
+      - 4000:4000
     # environment:
     #   - name=value
     env_file:
       - ./.env
+    volumes:
+      - /app/node_modules
+      - .:/app
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: 'bitnami/mongodb:latest'
+    ports:
+      - 27017:27017
+    networks:
+      - app-tier
+
