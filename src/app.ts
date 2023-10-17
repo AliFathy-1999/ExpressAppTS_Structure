@@ -9,14 +9,12 @@ import {ApiError, handleResponseError} from './lib/index'
 import swaggerSpec from './utils/swagger'; // Import your swaggerSpec
 const swaggerUi = require('swagger-ui-express');
 
-import connectToDB from "./DB/connects";
 import router from './routes/index'
 import HttpStatusCode from "./types/http-status-code";
 import errorMsg from "./utils/errorMsg";
 
 const app :Application = express();
-//Run MongoDB server
-connectToDB();
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

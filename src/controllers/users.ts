@@ -15,6 +15,7 @@ import errorMsg from "../utils/errorMsg";
 
 import fetchDataUtils from "../utils/fetch-data-utils";
 import { generateToken } from "../utils/utils-functions";
+import IFiles from "../interfaces/file";
 
 
 
@@ -37,8 +38,14 @@ const signIn = async (req:Request,res:Response,next:NextFunction) => {
         });        
 }
 const register = async (req: Request, res: Response, next: NextFunction) => {  
-        const images : any = req['files'];
-        // (Array<Express.Request['files']>)
+        console.log(req.files);
+        
+        // const images : IFiles = req.files as IFiles;
+        const images : any = req.files;
+        if (req.files?.length === 1) 
+            throw new ApiError(errorMsg.fileCount(1), HttpStatusCode.BAD_REQUEST);
+
+        
         const pImage : Array<string> = images.map((file)=> file.filename)
         // req.file? req['files'].filename : undefined    
         const { firstName , lastName, userName , email, password, role  } = req.body;
@@ -96,25 +103,21 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
-    const { query : { page , limit, sort, select, filter } } = req;
+    const { query : { page , limit, sort, select } } = req;
     const users =  User.find({})
-    const filterObj = JSON.parse(filter.toString());
     const fetchData = new fetchDataUtils(users, { page , limit, sort, select });
     (await fetchData.sort().paginate()).selection();
     const results = await fetchData.query;
-    const uss = await User.find(filterObj);
     res.status(HttpStatusCode.OK).json({
         status: 'success',
         message : successMsg.get('Users'),
-        uss
-        // data:{
-        //     page : +fetchData.page,
-        //     limit : +fetchData.limit,
-        //     totalDocs : fetchData.totalDocs,
-        //     totalPages:fetchData.totalPages,            
-        //     users : results
-        // },
-
+        data:{
+            page : +fetchData.page,
+            limit : +fetchData.limit,
+            totalDocs : fetchData.totalDocs,
+            totalPages:fetchData.totalPages,            
+            users : results
+        },
     })
 }
 export default {

@@ -1,14 +1,11 @@
-import dotenv from 'dotenv';
-dotenv.config();
-const { 
-    PORT,DB_URL,
-    CLOUDNAIRY_CLOUD_NAME, CLOUDNAIRY_API_KEY, CLOUDNAIRY_API_SECRET,MAX_FILE_SIZE,
-    NODE_ENV,ALLOWED_FILE_EXTENSIONS
-} = process.env;
+import dotenv, { config } from 'dotenv';
+config();
+const { PORT,DB_URL,NODE_ENV,DB_LOCAL_URL } = process.env;
 
-const localMongoURL = 'mongodb://localhost:27017/ecommerce-app';
+import uploadConfig from './upload-files';
+const localMongoURL = DB_LOCAL_URL;
 
-const config = {
+const configIndex = {
     app: {
         port: PORT || 4000,
         environment : NODE_ENV || 'development',
@@ -17,21 +14,8 @@ const config = {
         url: NODE_ENV === 'production' ? DB_URL : localMongoURL,
         conn_message: NODE_ENV === 'production' ? 'MongoDB Atlas connected successfully' : 'MongoDB Local connected successfully',
     },
-    uploadFileStatus: {
-        type: NODE_ENV === 'production' ? 'multer-cloudinary' : 'multer-local',
-    },
-    cloudinaryConfig: {
-        cloud_name: CLOUDNAIRY_CLOUD_NAME,
-        api_key: CLOUDNAIRY_API_KEY,
-        api_secret: CLOUDNAIRY_API_SECRET,
-    },
-    uploadedFile:{
-        limits: {
-            fileSize: Number(MAX_FILE_SIZE) * 1024 * 1024
-        },
-        allowedFileExtension : ALLOWED_FILE_EXTENSIONS,
-    },
+    uploadConfig
 };
 
 
-export default config;
+export default configIndex;

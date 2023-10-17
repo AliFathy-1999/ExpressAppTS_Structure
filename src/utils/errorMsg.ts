@@ -10,6 +10,7 @@ const errorMsg = {
     mongoConnection: (error:Error) : string => `MongoDB connection error: ${error.message}`,
     AllowedFile: (extensions:string) : string => `Allowed file extensions are ${extensions}`,
     ImageOrPdfOnly: 'Only images and pdfs are allowed',
+    fileCount: (fileCount:number) : string =>`Exactly ${fileCount} file is uploaded. You should upload more than ${fileCount} file.` ,
     customMsg: (msg:string) => msg
 }
 export default errorMsg;

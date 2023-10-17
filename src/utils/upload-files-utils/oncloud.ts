@@ -12,7 +12,7 @@ import { fileFilter } from './index';
 import config  from '../../config'
 import path from 'path';
 
-const { cloudinaryConfig, uploadedFile : { limits } } = config
+const { cloudinaryConfig, uploadedFile : { limits } } = config.uploadConfig
 // Configure Cloudinary
 cloudinary.config(cloudinaryConfig);
 

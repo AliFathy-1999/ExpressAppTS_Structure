@@ -1,8 +1,8 @@
+import connectToDB from './DB/connects';
 import app from './app';
-import config from './config/index'
-const { port } = config.app
+
+//Run MongoDB server and app server
+connectToDB(app);
 
 
-app.listen( port  || 4000, () => {
-  console.log(`Server Running here 👉 http://localhost:${port}`);
-});
+

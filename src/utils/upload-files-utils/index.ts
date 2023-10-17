@@ -11,7 +11,7 @@ import path from 'path';
 const { 
     uploadFileStatus: { type } ,
     uploadedFile : { allowedFileExtension }
-} = config
+} = config.uploadConfig
 
 
 const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   

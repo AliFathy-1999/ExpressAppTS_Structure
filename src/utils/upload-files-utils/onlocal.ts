@@ -9,17 +9,17 @@ import errorMsg from '../errorMsg';
 import HttpStatusCode from '../../types/http-status-code';
 const { 
   uploadedFile : { allowedFileExtension ,limits }
-} = config
+} = config.uploadConfig
 const uploadsFolderPath = path.join(__dirname, '../../../uploads');
 const imagesFolderPath = path.join(uploadsFolderPath, '/uploaded-images');
 const pdfsFolderPath = path.join(uploadsFolderPath, '/uploaded-pdfs');
 
 // Define functions for destination and filename
 const filesDestination = (req: Request, file: Express.Multer['File'], callback: (error: Error | null, destination: string) => void) => {
-  let fileType = file.mimetype.split("/")[0];
-  fileType === "image"
-    ? callback(null, imagesFolderPath)
-    : callback(null, pdfsFolderPath);
+    let fileType = file.mimetype.split("/")[0];
+      fileType === "image"
+        ? callback(null, imagesFolderPath)
+        : callback(null, pdfsFolderPath)
 };
 
 const renameFilename = async (req: Request, file: Express.Multer['File'], callback: (error: Error | null, destination: string) => void) => {
@@ -34,6 +34,7 @@ const storage = diskStorage({
 });
 
 const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
+  
   const fileType = file.mimetype.split("/")[0]
   const mediaTypeName = file.mimetype.split("/")[1]
   const fileExtension = path.extname(file.originalname);
@@ -41,7 +42,6 @@ const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, 
   // if ( fileType !== "image" && mediaTypeName !== "pdf") {
   //     return callback(new ApiError(errorMsg.ImageOrPdfOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
   //   }
-    
   if (!allowedFileExtension.includes(fileExtension)) {
       return callback(new ApiError(errorMsg.ImageOrPdfOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
     }
