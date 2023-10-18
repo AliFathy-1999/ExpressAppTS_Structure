@@ -1,9 +1,9 @@
-import {  Schema,model } from "mongoose";
-import validator from "validator"
+import { Schema, model } from 'mongoose';
+import validator from 'validator'
 import bcryptjs from 'bcryptjs'
 
 
-import { ApiError } from "../../lib";
+import { ApiError } from '../../lib';
 import { IUser, Role } from '../../interfaces/user';
 
 
@@ -48,7 +48,7 @@ const schema = new Schema<IUser>({
       unique: true,
       validate(value: string) {
         if (!validator.isEmail(value)) {
-          throw new ApiError('Invalid email',400);
+          throw new ApiError('Invalid email', 400);
         }
       },
     },
@@ -58,10 +58,12 @@ const schema = new Schema<IUser>({
       trim: true,
       minlength: [6, 'Password must be at least 6 characters'],
       match: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/,
+
       //@iti43OS
+
       validate(value: string) {
         if (!value.match(/(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/)) {
-          throw new ApiError('Password must contain at least one number , Capital letter and one special character' , 400);
+          throw new ApiError('Password must contain at least one number , Capital letter and one special character', 400);
         }
       },
     },
@@ -78,7 +80,7 @@ const schema = new Schema<IUser>({
       enum: Object.values(Role),
       default: Role.USER,
     },
-},{
+}, {
   timestamps: true
 })
 
@@ -90,10 +92,13 @@ schema.methods.toJSON = function () {
   return userObject;
 };
 
+schema.methods.comparePassword = async function (password: string): Promise<Boolean> {
+  return bcryptjs.compare(password, this.password);
+};
 
 schema.pre('save', async function () {
   if (this.isModified('password')) 
     this.password = await bcryptjs.hash(this.password, 10);
 });
 
-export default model<IUser>("User",schema)
+export default model<IUser>('User', schema)

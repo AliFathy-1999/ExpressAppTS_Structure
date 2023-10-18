@@ -1,4 +1,4 @@
-import  { Document, ObjectId } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 enum Role {
   ADMIN = 'admin',
@@ -20,8 +20,8 @@ enum ORDER {
       verified: boolean;
       pImage?: string;
       role: Role;
+      comparePassword(password: string): Promise<Boolean>;
   }
-
 
 
 export { IUser, Role, ORDER }

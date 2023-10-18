@@ -1,13 +1,13 @@
 import dotenv, { config } from 'dotenv';
 config();
-const { PORT,DB_URL,NODE_ENV,DB_LOCAL_URL } = process.env;
+const { PORT, DB_URL, NODE_ENV, DB_LOCAL_URL } = process.env;
 
 import uploadConfig from './upload-files';
 const localMongoURL = DB_LOCAL_URL;
 
 const configIndex = {
     app: {
-        port: PORT || 4000,
+        port : PORT || 4000,
         environment : NODE_ENV || 'development',
     },
     db: {

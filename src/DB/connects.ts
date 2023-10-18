@@ -1,10 +1,10 @@
-import { Error } from "mongoose";
-import mongoose from "mongoose";
+import { Error } from 'mongoose';
+import mongoose from 'mongoose';
 
 import config from '../config'
-import errorMsg from "../utils/errorMsg";
-import { Application } from "express";
-import startExpressApp from "../config/start-app";
+import errorMsg from '../utils/errorMsg';
+import { Application } from 'express';
+import startExpressApp from '../config/start-app';
 const { 
   db: { url, conn_message }
 } = config;
@@ -16,7 +16,7 @@ const {
             startExpressApp(app);
         })
         .catch((error:Error) => {
-        console.error(errorMsg.mongoConnection(error));
+          console.error(errorMsg.mongoConnection(error));
       });
   } 
   export default connectToDB;
