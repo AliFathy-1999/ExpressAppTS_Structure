@@ -15,6 +15,7 @@ import errorMsg from '../utils/errorMsg';
 import fetchDataUtils from '../utils/fetch-data-utils';
 import { generateToken } from '../utils/utils-functions';
 import { commonService, userServices } from '../services';
+import { Model } from 'mongoose';
 
 
 const signIn = async (req:Request, res:Response, next:NextFunction) => {
@@ -99,7 +100,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     const { query : { page, limit, sort, select } } = req;
-    const users = await commonService.getModelService(User as any, { page, limit, sort, select });
+    const users = await commonService.getModelService(User, { page, limit, sort, select });
     if(users) infoLogger(`${req.method} | success | ${HttpStatusCode.OK} | ${req.protocol} | ${req.originalUrl}`)
     res.status(HttpStatusCode.OK).json({
         status: 'success',
