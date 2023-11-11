@@ -1,6 +1,8 @@
 import fetchDataUtils from '../utils/fetch-data-utils';
 import Ipaginate from '../interfaces/paginate';
 import { Document, Model } from 'mongoose'; // Adjust these imports as needed
+import searchUtils from '../utils/search.utils';
+import User from '../DB/models/users';
 
 type ModelType<T extends Document> = Model<T>;
 
@@ -22,7 +24,24 @@ const getModelService = async <T extends Document>(
         }
         return data
 };
+const searchModelService = async <T extends Document>(
+    Model: ModelType<T>,
+    utilities: { [key: string]: any }
+    ): Promise<any> => {
+        // const { page, limit, sort, select } = utilities
+        const { searchField, searchValue } = utilities
+        
+        const fetchData = new searchUtils(User, { searchField, searchValue });
+        await fetchData.search();
+        const results = await fetchData.query;
+        
+        // const data = {
+        //     data : results as any[]
+        // }
+        return results
+};
 
 export default {
-    getModelService
+    getModelService,
+    searchModelService
 }

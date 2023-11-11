@@ -79,9 +79,30 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
+const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
+    const { 
+        query : { 
+            searchField,
+            searchValue
+        }
+    } = req;
+    const users = await commonService.searchModelService(User, { searchField, searchValue })
+    // .userSearchService(searchField as string,searchValue as string);
+    const message = users.length === 0 ? 
+        errorMsg.searchNotFoundValue('User', searchField as string,searchValue as string) 
+        : successMsg.get('Users');
+    if(users) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
+    res.status(StatusCodes.OK).json({
+        status: 'success',
+        message,
+        data: users
+    })
+}
+
 export default {
     updateUser,
     deleteUser,
     getUsers,
     getUserById,
+    searchUsers
 }

@@ -11,6 +11,8 @@ const errorMsg = {
     AllowedFile: (extensions:string) : string => `Allowed file extensions are ${extensions}`,
     ImageOrPdfOnly: 'Only images and pdfs are allowed',
     fileCount: (fileCount:number) : string =>`Exactly ${fileCount} file is uploaded. You should upload more than ${fileCount} file.` ,
+    searchNotFoundValue: (model:string,field:string,value:string) : string => `No results found for ${model} has ${field} with ${value}`,
+    searchByInvalidField: (model:string,field:string) : string => `No such field with this name ${field} in ${model}`,
     customMsg: (msg:string) => msg
 }
 export default errorMsg;
