@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DuplicateKeyError } from '../lib/apiError'
+import { DuplicateKeyError } from '../../lib/apiError'
 
 const errorMsg = {
     mongooseInvalidInput:(err: mongoose.Error.ValidationError) : string => `${Object.keys(err.errors).join(' ')} is not valid `,

@@ -6,8 +6,9 @@ import path from 'path';
 import * as crypto from 'crypto';
 import config from '../../config';
 import { ApiError } from '../../lib';
-import errorMsg from '../errorMsg';
-import HttpStatusCode from '../../types/http-status-code';
+import errorMsg from '../messages/errorMsg';
+import { StatusCodes } from 'http-status-codes';
+
 const { 
   uploadedFile : { allowedFileExtension, limits }
 } = config.uploadConfig
@@ -44,11 +45,11 @@ const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, 
   const fileExtension = path.extname(file.originalname);
   
   // if ( fileType !== "image" && mediaTypeName !== "pdf") {
-  //     return callback(new ApiError(errorMsg.ImageOrPdfOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
+  //     return callback(new ApiError(errorMsg.ImageOrPdfOnly, StatusCodes.UNSUPPORTED_MEDIA_TYPE), null);
   //   }
 
   if (!allowedFileExtension.includes(fileExtension)) {
-      return callback(new ApiError(errorMsg.ImageOrPdfOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
+      return callback(new ApiError(errorMsg.ImageOrPdfOnly, StatusCodes.UNSUPPORTED_MEDIA_TYPE), null);
     }
     return callback(null, true);  
   }

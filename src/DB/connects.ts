@@ -2,7 +2,7 @@ import { Error } from 'mongoose';
 import mongoose from 'mongoose';
 
 import config from '../config'
-import errorMsg from '../utils/errorMsg';
+import errorMsg from '../utils/messages/errorMsg';
 import { Application } from 'express';
 import startExpressApp from '../config/start-app';
 const { 

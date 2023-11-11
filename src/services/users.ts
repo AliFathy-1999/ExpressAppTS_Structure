@@ -10,10 +10,12 @@ const updateUserService = async (filterBy: { [key:string] : any}, updateData: { 
 
 const deleteUserService = async (filterBy: { [key:string] : any}) : Promise<IUser> => await User.findOneAndDelete(filterBy);
 
+const getUserByIdService = async (filterBy: { [key:string] : any}) : Promise<IUser> => await User.findOne(filterBy);
 
 export default{
     getUserService,
     createUserService,
     updateUserService,
     deleteUserService,
+    getUserByIdService
 }

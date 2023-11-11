@@ -3,7 +3,7 @@ import { Schema, ValidationError } from "joi";
 
 import { ApiError } from "../lib";
 
-const validate = (schema) => async (req:Request, res:Response, next:NextFunction) => {
+const validate = (schema: { [key: string]: Schema }) => async (req:Request, res:Response, next:NextFunction) => {
   const validationErr = [];
   ['body', 'params', 'query'].forEach((key) => {
     if (schema[key]) {

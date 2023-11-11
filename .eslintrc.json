@@ -33,6 +33,7 @@
             "space-infix-ops": ["warn", { "int32Hint": false }],
             "no-multi-spaces": "warn",
             "no-multiple-empty-lines": "warn",
+            "@typescript-eslint/naming-convention": "on",
             // "key-spacing": ["warn", {
             //     "beforeColon": true,
             //     "afterColon": true,

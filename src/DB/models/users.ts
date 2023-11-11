@@ -2,10 +2,12 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator'
 import bcryptjs from 'bcryptjs'
 
-
 import { ApiError } from '../../lib';
 import { IUser, Role } from '../../interfaces/user';
+import validationPatterns from '../../utils/pattern.utils';
 
+const { ALPHABETIC_ONLY_PATTERN , STRONG_PASSWORD_PATTERN } = validationPatterns 
+import { StatusCodes } from 'http-status-codes';
 
 const schema = new Schema<IUser>({
     firstName : {
@@ -14,10 +16,11 @@ const schema = new Schema<IUser>({
         maxLength : [15, 'First name must be at less than 15 characters'],
         required :  [true, 'First name is a required field'],
         trim :      true,
-        match :     /^[A-Za-z\s]+$/,
+        match :    ALPHABETIC_ONLY_PATTERN.pattern,
         validate(value:string) {
-          if (!value.match(/^[A-Za-z\s]+$/)) {
-            throw new Error('First Name should contain alphabetic characters only');
+          if (!value.match(ALPHABETIC_ONLY_PATTERN.pattern)) {
+            if(ALPHABETIC_ONLY_PATTERN.message instanceof Function)
+            throw new ApiError(ALPHABETIC_ONLY_PATTERN.message("First Name"),StatusCodes.BAD_REQUEST);
           }
         },
       },
@@ -27,10 +30,11 @@ const schema = new Schema<IUser>({
         maxLength : [15, 'Last name must be at less than 15 characters'],
         required :  [true, 'Last name is a required field'],
         trim :      true,
-        match :     /^[A-Za-z\s]+$/,
+        match :     ALPHABETIC_ONLY_PATTERN.pattern,
         validate(value:string) {
-          if (!value.match(/^[A-Za-z\s]+$/)) {
-            throw new Error('Last Name should contain alphabetic characters only');
+          if (!value.match(ALPHABETIC_ONLY_PATTERN.pattern)) {
+            if(ALPHABETIC_ONLY_PATTERN.message instanceof Function)
+            throw new ApiError((ALPHABETIC_ONLY_PATTERN.message("Last Name")),StatusCodes.BAD_REQUEST);
           }
         },
     },
@@ -57,13 +61,13 @@ const schema = new Schema<IUser>({
       required: [true, 'Password is a required field'],
       trim: true,
       minlength: [6, 'Password must be at least 6 characters'],
-      match: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/,
+      match: STRONG_PASSWORD_PATTERN.pattern,
 
       //@iti43OS
 
       validate(value: string) {
-        if (!value.match(/(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/)) {
-          throw new ApiError('Password must contain at least one number , Capital letter and one special character', 400);
+        if (!value.match(STRONG_PASSWORD_PATTERN.pattern)) {
+          throw new ApiError(STRONG_PASSWORD_PATTERN.message as string, 400);
         }
       },
     },

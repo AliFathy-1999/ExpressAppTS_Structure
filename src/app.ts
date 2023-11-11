@@ -10,8 +10,8 @@ import swaggerSpec from './utils/swagger'; // Import your swaggerSpec
 const swaggerUi = require('swagger-ui-express');
 
 import router from './routes/index'
-import HttpStatusCode from "./types/http-status-code";
-import errorMsg from "./utils/errorMsg";
+import errorMsg from "./utils/messages/errorMsg";
+import { StatusCodes } from "http-status-codes";
 
 const app :Application = express();
 
@@ -28,7 +28,7 @@ app.use(router);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all('*',async (req:Request, res:Response,next:NextFunction) => {
-    next(new ApiError(errorMsg.RouteNotFound(req.originalUrl), HttpStatusCode.NOT_FOUND));
+    next(new ApiError(errorMsg.RouteNotFound(req.originalUrl), StatusCodes.NOT_FOUND));
 })
 
 app.use(handleResponseError);

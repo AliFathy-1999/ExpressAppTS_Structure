@@ -33,6 +33,7 @@ const signUp = {
             'string.empty': 'User name is a required field',
             'string.min': 'Username must be at least 3 characters',
             'string.max': 'Username must be at most 30 characters',
+            'string.pattern.base' : 'Username must contain only alphabet letter and numbers',
         }),       
         password: Joi.string()
         .min(8)
@@ -46,7 +47,7 @@ const signUp = {
         .any()
         .messages({
             'any.empty': 'Profile Image is a required field',
-        }) ,
+        }),
         role : Joi.string().valid('admin', 'user').default('admin'),
     }),
 }

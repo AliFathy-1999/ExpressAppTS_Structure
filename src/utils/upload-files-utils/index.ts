@@ -4,8 +4,7 @@ import  localFileUpload  from './onlocal';
 import { cloudinaryFileUpload } from './oncloud';
 import multer from 'multer';
 import { ApiError } from '../../lib';
-import errorMsg from '../errorMsg';
-import HttpStatusCode from '../../types/http-status-code';
+import errorMsg from '../messages/errorMsg';
 import config from '../../config';
 import path from 'path';
 const { 
@@ -20,7 +19,7 @@ const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, 
   console.log(mediaTypeName);
   
   // if ( fileType !== "image" || mediaTypeName !== "pdf") {
-  //     return callback(new ApiError(errorMsg.ImageOnly, HttpStatusCode.UNSUPPORTED_MEDIA_TYPE), null);
+  //     return callback(new ApiError(errorMsg.ImageOnly, StatusCodes.UNSUPPORTED_MEDIA_TYPE), null);
   //   }
     
   if (!allowedFileExtension.includes(path.extname(file.originalname))) {
