@@ -28,17 +28,24 @@ const searchModelService = async <T extends Document>(
     Model: ModelType<T>,
     utilities: { [key: string]: any }
     ): Promise<any> => {
-        // const { page, limit, sort, select } = utilities
-        const { searchField, searchValue } = utilities
-        
-        const fetchData = new searchUtils(User, { searchField, searchValue });
-        await fetchData.search();
+        const { searchField, searchValue, page, limit, sort, select } = utilities
+        const searchInstance = new searchUtils(Model, {searchField, searchValue, page, limit, sort, select});
+    
+        const searchQueryResult = await searchInstance.search();
+    
+        const fetchData = new fetchDataUtils(searchQueryResult.query, { page, limit, sort, select });
+        ((await fetchData.paginate()).sort()).selection();
+
         const results = await fetchData.query;
         
-        // const data = {
-        //     data : results as any[]
-        // }
-        return results
+        const data: Ipaginate = {
+            page: +fetchData.page,
+            limit: +fetchData.limit,
+            totalDocs: fetchData.totalDocs,
+            totalPages: fetchData.totalPages,
+            data: results as any[],
+        };
+    return data;
 };
 
 export default {

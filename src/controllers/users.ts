@@ -86,9 +86,10 @@ const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
             searchValue
         }
     } = req;
-    const users = await commonService.searchModelService(User, { searchField, searchValue })
+    const users = await commonService.searchModelService(User, req.query) 
+    
     // .userSearchService(searchField as string,searchValue as string);
-    const message = users.length === 0 ? 
+    const message = users?.length === 0 ? 
         errorMsg.searchNotFoundValue('User', searchField as string,searchValue as string) 
         : successMsg.get('Users');
     if(users) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
