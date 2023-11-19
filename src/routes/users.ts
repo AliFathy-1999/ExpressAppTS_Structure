@@ -11,12 +11,19 @@ import { userController } from '../controllers';
 import { upload } from '../utils/upload-files-utils';
 
 const router = Router();
-
+router.get('/test',async (req,res,next) => {
+    console.log("test");
+    
+    res.send('test') 
+} )
 router.delete('/:id', adminAuth, asyncWrapper(userController.deleteUser))
 router.patch('/', Auth, upload, validate(usersValidator.signUp), asyncWrapper(userController.updateUser))
 router.get('/search', validate(searchValidator),asyncWrapper(userController.searchUsers))
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', Auth, asyncWrapper(userController.getUserById))
+
+
+
 
 export default router;
