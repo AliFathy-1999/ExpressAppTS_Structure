@@ -3,7 +3,6 @@ import { Document, ObjectId } from 'mongoose';
 enum Role {
   ADMIN = 'admin',
   USER = 'user',
-  BOTH = 'both',
 }
 
 enum ORDER {

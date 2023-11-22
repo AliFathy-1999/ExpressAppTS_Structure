@@ -1,6 +1,10 @@
 import * as crypto from 'crypto';
 import { IUser } from '../interfaces/user';
 import jwt from 'jsonwebtoken';
+import { ApiError } from '../lib';
+import { StatusCodes } from 'http-status-codes';
+import User from '../DB/models/users';
+import errorMsg from './messages/errorMsg';
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex');
 }
@@ -18,7 +22,15 @@ const generateToken = (user:IUser)=>{
     )
     return token;
 }
-
+const verifyToken = async (bearerToken:string) => {
+    bearerToken = bearerToken.split(' ')[1];
+    if(!bearerToken) return new ApiError(errorMsg.signInAgain, StatusCodes.UNAUTHORIZED); 
+    const decoded = jwt.verify(bearerToken, process.env.TOKEN_KEY);
+    const user = await User.findById(decoded.userId);
+    if(!user) return new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED); 
+    
+    return user;
+  };
 const generateOTP = (noOfDigits: number) => {
     noOfDigits = noOfDigits || 6
     const digits = '0123456789';
@@ -37,5 +49,6 @@ export {
     hashText,
     generateToken,
     generateOTP,
-    trimText
+    trimText,
+    verifyToken
 }

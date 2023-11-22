@@ -52,6 +52,9 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
 const getProfile =async (req:Request, res:Response, next:NextFunction) => {
     const { _id } = req.user;
+    const s = req.user._id
+    console.log(s);
+    
     const user = await userServices.getUserService({_id});
     if(user) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
     res.status(StatusCodes.OK).json({

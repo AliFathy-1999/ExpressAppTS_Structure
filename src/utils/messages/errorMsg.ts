@@ -13,6 +13,9 @@ const errorMsg = {
     fileCount: (fileCount:number) : string =>`Exactly ${fileCount} file is uploaded. You should upload more than ${fileCount} file.` ,
     searchNotFoundValue: (model:string,field:string,value:string) : string => `No results found for ${model} has ${field} with ${value}`,
     searchByInvalidField: (model:string,field:string) : string => `No such field with this name ${field} in ${model}`,
+    unAuthorized: 'Unauthorized access',
+    unAuthenticated: 'unauthenticated access',
+    signInAgain: 'Please sign in again',
     customMsg: (msg:string) => msg
 }
 export default errorMsg;
