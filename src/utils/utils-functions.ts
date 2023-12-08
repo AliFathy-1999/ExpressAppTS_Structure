@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import { IUser } from '../interfaces/user';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { ApiError } from '../lib';
 import { StatusCodes } from 'http-status-codes';
 import User from '../DB/models/users';
@@ -22,10 +22,11 @@ const generateToken = (user:IUser)=>{
     )
     return token;
 }
-const verifyToken = async (bearerToken:string) => {
+const verifyToken = async (bearerToken:string) : Promise<IUser | ApiError>=> {
     bearerToken = bearerToken.split(' ')[1];
     if(!bearerToken) return new ApiError(errorMsg.signInAgain, StatusCodes.UNAUTHORIZED); 
-    const decoded = jwt.verify(bearerToken, process.env.TOKEN_KEY);
+    const decoded = jwt.verify(bearerToken, process.env.TOKEN_KEY) as JwtPayload;
+        
     const user = await User.findById(decoded.userId);
     if(!user) return new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED); 
     

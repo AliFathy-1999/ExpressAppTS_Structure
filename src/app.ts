@@ -24,7 +24,7 @@ app.use(helmet());
 app.use(limiter);
 app.use(sanitizer());
 
-app.use(router);
+app.use('/api/', router);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all('*',async (req:Request, res:Response,next:NextFunction) => {
