@@ -17,8 +17,9 @@ router.patch('/', Auth, upload, validate(usersValidator.signUp), asyncWrapper(us
 router.get('/search', validate(searchValidator),asyncWrapper(userController.searchUsers))
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id', Auth, asyncWrapper(userController.getUserById))
+router.get('/qrcode', asyncWrapper(userController.getQrCode))
 
+router.get('/:id', Auth, asyncWrapper(userController.getUserById))
 
 
 

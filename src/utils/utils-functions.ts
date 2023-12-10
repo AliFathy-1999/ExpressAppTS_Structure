@@ -5,6 +5,7 @@ import { ApiError } from '../lib';
 import { StatusCodes } from 'http-status-codes';
 import User from '../DB/models/users';
 import errorMsg from './messages/errorMsg';
+import * as QRCode from 'qrcode';
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex');
 }
@@ -46,10 +47,21 @@ const trimText = (text:string) => {
     return text.replace(/\s+/g, ' ');
 }
 
+const generateQRCode = async (qrCodeContent:any) => {
+    try {
+        const qrCodeAsString = JSON.stringify(qrCodeContent)
+        const generateUrl = await QRCode.toDataURL(qrCodeAsString);
+        return generateUrl;
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 export {
     hashText,
     generateToken,
     generateOTP,
     trimText,
-    verifyToken
+    verifyToken,
+    generateQRCode
 }

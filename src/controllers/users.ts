@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import bcryptjs from 'bcryptjs'; 
 
-import { IUser, ORDER } from '../interfaces/user';
 
 import { ApiError } from '../lib';
 import { removeImage } from '../utils/upload-files-utils/oncloud';
@@ -12,8 +10,8 @@ import successMsg from '../utils/messages/successMsg';
 import errorMsg from '../utils/messages/errorMsg';
 import { StatusCodes } from 'http-status-codes';
 
-import fetchDataUtils from '../utils/fetch-data-utils';
 import { commonService, userServices } from '../services';
+import {generateQRCode  } from '../utils/utils-functions';
 
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -100,10 +98,27 @@ const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
+const getQrCode = async (req: Request, res: Response, next: NextFunction) => {
+    const qrCodeBody = {
+        name: 'Ali Ahmed',
+        email: 'a@a.com',
+        phone: '1234567890',
+        address: '123 Main St',
+        city: 'New York',
+
+    }
+    const url = await generateQRCode(qrCodeBody);
+    res.status(StatusCodes.OK).json({
+        status: 'success',
+        message : successMsg.get('QrCode'),
+        data: url
+    })
+}
 export default {
     updateUser,
     deleteUser,
     getUsers,
     getUserById,
-    searchUsers
+    searchUsers,
+    getQrCode
 }
