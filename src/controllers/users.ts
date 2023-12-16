@@ -12,6 +12,8 @@ import { StatusCodes } from 'http-status-codes';
 
 import { commonService, userServices } from '../services';
 import {generateQRCode  } from '../utils/utils-functions';
+import sendEmail from '../utils/sendEmail';
+import renderTemplate from '../utils/renderTemplate';
 
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -114,11 +116,33 @@ const getQrCode = async (req: Request, res: Response, next: NextFunction) => {
         data: url
     })
 }
+const testSendEmail = async (req: Request, res: Response, next: NextFunction) => {
+    const emailBody = {
+        to: 'mail.sender.ali.test@gmail.com',
+        subject: 'Test Email',
+        text: 'This is a test email',
+        html: '<p>This is a test email</p>'
+    }
+    const emailTemplate = await renderTemplate({ firstName: "Ali Fathi", email: "aliahmedfathi37@gmail.com" }, 'activateAccount') 
+    const email = await sendEmail({
+        from: process.env.SENDER_EMAIL,
+        to: "aliahmedfathi37@gmail.com",
+        subject: emailBody.subject,
+        text: emailBody.text,
+        html: emailTemplate
+    });
+    res.status(StatusCodes.OK).json({
+        status: 'success',
+        message : successMsg.get('Email'),
+        data: email
+    })
+}
 export default {
     updateUser,
     deleteUser,
     getUsers,
     getUserById,
     searchUsers,
-    getQrCode
+    getQrCode,
+    testSendEmail
 }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Operation <%= status %></title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 40px 0;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .success-icon {
+            color: #28a745;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .failure-icon {
+            color: #dc3545;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto;">
+        <tr>
+            <td style="padding: 20px;">
+                <div class="container">
+                    <div class="text-center">
+                        <% if (status === 'success') { %>
+                            <i class="fas fa-check-circle success-icon"></i>
+                            <h1 class="display-4">Operation Successful 🎉</h1>
+                            <p class="lead">Congratulations!</p>
+                            <p>Your <%= operation %> was successful.</p>
+                        <% } else if (status === 'failure') { %>
+                            <i class="fas fa-times-circle failure-icon"></i>
+                            <h1 class="display-4">Operation Failed ❌</h1>
+                            <p class="lead">Sorry, <%= operation %> failed.</p>
+                            <p>Please try again later or contact support.</p>
+                        <% } %>
+                        <hr class="my-4">
+                        <p class="text-muted">Thank you!</p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

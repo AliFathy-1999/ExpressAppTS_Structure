@@ -1,6 +1,6 @@
 import dotenv, { config } from 'dotenv';
 config();
-const { PORT, DB_URL, NODE_ENV, DB_LOCAL_URL } = process.env;
+const { PORT, DB_URL, NODE_ENV, DB_LOCAL_URL, SENDER_EMAIL } = process.env;
 
 import uploadConfig from './upload-files';
 const localMongoURL = DB_LOCAL_URL;
@@ -14,7 +14,7 @@ const configIndex = {
         url: NODE_ENV === 'production' ? DB_URL : localMongoURL,
         conn_message: NODE_ENV === 'production' ? 'MongoDB Atlas connected successfully' : 'MongoDB Local connected successfully',
     },
-    uploadConfig
+    uploadConfig,
 };
 
 

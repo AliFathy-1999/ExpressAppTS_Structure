@@ -12,6 +12,7 @@ const swaggerUi = require('swagger-ui-express');
 import router from './routes/index'
 import errorMsg from "./utils/messages/errorMsg";
 import { StatusCodes } from "http-status-codes";
+import path from "path";
 
 const app :Application = express();
 
@@ -23,6 +24,9 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(limiter);
 app.use(sanitizer());
+//SSR 
+app.set('view engine', 'ejs');
+app.set('templates', path.join(__dirname, 'templates'));
 
 app.use('/api/', router);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
