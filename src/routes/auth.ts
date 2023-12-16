@@ -14,6 +14,8 @@ const router = Router()
 router.post('/register', upload, validate(usersValidator.signUp), asyncWrapper(authController.register))
 router.post('/login', validate(usersValidator.signIn), asyncWrapper(authController.signIn))
 router.get('/profile', Auth, asyncWrapper(authController.getProfile))
+router.patch('/activate', asyncWrapper(authController.activateAccount))
+router.post('/resendEmail', asyncWrapper(authController.resendEmail))
 
 
 

@@ -118,19 +118,11 @@ const getQrCode = async (req: Request, res: Response, next: NextFunction) => {
 }
 const testSendEmail = async (req: Request, res: Response, next: NextFunction) => {
     const emailBody = {
-        to: 'mail.sender.ali.test@gmail.com',
-        subject: 'Test Email',
+        subject: 'Test Email Subject',
         text: 'This is a test email',
-        html: '<p>This is a test email</p>'
     }
     const emailTemplate = await renderTemplate({ firstName: "Ali Fathi", email: "aliahmedfathi37@gmail.com" }, 'activateAccount') 
-    const email = await sendEmail({
-        from: process.env.SENDER_EMAIL,
-        to: "aliahmedfathi37@gmail.com",
-        subject: emailBody.subject,
-        text: emailBody.text,
-        html: emailTemplate
-    });
+    const email = await sendEmail( "aliahmedfathi37@gmail.com", emailBody.subject, emailTemplate);
     res.status(StatusCodes.OK).json({
         status: 'success',
         message : successMsg.get('Email'),

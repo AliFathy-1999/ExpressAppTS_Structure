@@ -18,7 +18,6 @@ router.get('/search', validate(searchValidator),asyncWrapper(userController.sear
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/qrcode', asyncWrapper(userController.getQrCode))
-router.get('/test', asyncWrapper(userController.testSendEmail))
 
 router.get('/:id', Auth, asyncWrapper(userController.getUserById))
 

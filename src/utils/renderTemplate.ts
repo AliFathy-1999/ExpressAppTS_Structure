@@ -6,7 +6,7 @@ const renderTemplate = async (content: {[key: string]: any} ,templateName: strin
         const renderTemp = await ejs.renderFile(templatePath, {
             user_firstname: content.firstName,
             status: content.status,
-            confirm_link: "http://localhost:5000/success",
+            confirm_link: `http://localhost:4000/api/v1/auth/activate?email=${content.email}`,
             operation: "Activation your account" 
         });
         return renderTemp;
