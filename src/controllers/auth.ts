@@ -6,7 +6,7 @@ import { infoLogger } from '../utils/logger';
 import successMsg from '../utils/messages/successMsg';
 import errorMsg from '../utils/messages/errorMsg';
 
-import { generateToken } from '../utils/utils-functions';
+import { generateToken, hashText } from '../utils/utils-functions';
 import { userServices } from '../services';
 import { StatusCodes } from 'http-status-codes';
 import renderTemplate from '../utils/renderTemplate';
@@ -21,7 +21,7 @@ const signIn = async (req:Request, res:Response, next:NextFunction) => {
         const passwordMatch = await user.comparePassword(password);
         if (!passwordMatch) throw new ApiError(errorMsg.IncorrectField('Password'), StatusCodes.UNAUTHORIZED);        
 
-        if(user.verified === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
+        if(user.activated === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
         infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl} `)
         res.status(StatusCodes.OK).json({
             status:'success',
@@ -47,11 +47,12 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
             text: 'Activate Your Email',
         }
         //Send Email
-        const user = await userServices.createUserService({ firstName, lastName, userName, email, password, pImage, role });
+        const token = hashText(email);
+
+        const user = await userServices.createUserService({ firstName, lastName, userName, email, password, pImage, role, activaredToken: token });
         
         if(!user) throw new ApiError(errorMsg.customMsg('Error in user registration'), StatusCodes.BAD_REQUEST);
-        
-        const emailTemplate = await renderTemplate({ firstName, email }, 'activateAccount') 
+        const emailTemplate = await renderTemplate({ firstName, token }, 'activateAccount') 
         await sendEmail( email, emailBody.subject, emailTemplate);
 
         if(user) infoLogger(`${req.method} | success | ${StatusCodes.CREATED} | ${req.protocol} | ${req.originalUrl}`)
@@ -74,8 +75,11 @@ const getProfile =async (req:Request, res:Response, next:NextFunction) => {
 }
 const activateAccount = async (req:Request, res:Response, next:NextFunction) => {
     const { email } = req.query;
+    const { token } = req.params;
+    if(!token) throw new ApiError(errorMsg.IncorrectField('Token'), StatusCodes.BAD_REQUEST);
     if(!email) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.BAD_REQUEST);
-    const updateUser = await userServices.updateUserService( { email }, { verified: true });
+
+    const updateUser = await userServices.updateUserService( { email, activaredToken: token }, { activated: true });
     if(!updateUser) throw new ApiError(errorMsg.NotFound('User',`${email}`,'Email'), StatusCodes.BAD_REQUEST);
     if(updateUser) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
     res.status(StatusCodes.OK).json({
@@ -89,7 +93,7 @@ const resendEmail = async (req:Request, res:Response, next:NextFunction) => {
     if(!email) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.BAD_REQUEST);
     const user = await userServices.getUserService({email});
     if(!user) throw new ApiError(errorMsg.NotFound('User',`${email}`,'Email'), StatusCodes.BAD_REQUEST);
-    if(user.verified === true) throw new ApiError(errorMsg.userAlreadyVerified, StatusCodes.OK);
+    if(user.activated === true) throw new ApiError(errorMsg.userAlreadyVerified, StatusCodes.OK);
     const emailBody = {
         subject: 'Activate Your Email',
         text: 'Activate Your Email',
