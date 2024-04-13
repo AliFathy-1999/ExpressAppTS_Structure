@@ -75,9 +75,13 @@ const schema = new Schema<IUser>({
       type: String,
       default: 'https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png',
     }],
-    verified:{
+    activated:{
       type:Boolean,
       default: false,
+    },
+    activatedToken: {
+      type: String,
+      default: null
     },
     role: {
       type: String,
@@ -85,7 +89,8 @@ const schema = new Schema<IUser>({
       default: Role.USER,
     },
 }, {
-  timestamps: true
+  timestamps: true,
+  versionKey: false,
 })
 
 schema.methods.toJSON = function () {

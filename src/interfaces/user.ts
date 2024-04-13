@@ -17,7 +17,8 @@ enum ORDER {
       email: string;
       password: string;
       userName: string;
-      verified: boolean;
+      activated: boolean;
+      activatedToken: string;
       pImage?: string;
       role: Role;
       comparePassword(password: string): Promise<Boolean>;

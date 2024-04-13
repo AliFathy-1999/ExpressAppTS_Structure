@@ -17,7 +17,7 @@ const checkUserRole = (role: Role[] ) => {
       if (!bearerToken) 
         throw new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED);
       const result = await verifyToken(bearerToken) as IUser;
-      if(result.verified === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
+      if(result.activated === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
       // if (role === Role.BOTH) {        
       //   req.user = result;
       //   return next();
