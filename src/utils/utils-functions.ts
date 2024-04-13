@@ -6,6 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import User from '../DB/models/users';
 import errorMsg from './messages/errorMsg';
 import * as QRCode from 'qrcode';
+import moment from 'moment';
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex');
 }
@@ -56,12 +57,26 @@ const generateQRCode = async (qrCodeContent:any) => {
         console.error(err)
     }
 }
-
+const handleStringifyValueResponse = (stringValue:string) => {
+    //Example
+    // stringValue = "{\\people\\:{\\persons\\:[{\\id\\:\\\"123\\\",\\name\\:\\\"علي احمد \\\",\\age\\:\\\"22\\\",\\salary\\:\\\"500\\\"},{\\id\\:\\\"456\\\",\\name\\:\\\"حسام\\\",\\age\\:\\\"30\\\",\\salary\\:\\\"1000\\\"},{\\id\\:\\\"789\\\",\\name\\:\\\"حامد\\\",\\age\\:\\\"48\\\",\\salary\\:\\\"6000\\\"}]}}"
+    const removeBackSlashes = stringValue?.replace(/\\/g, '"')?.replace(/:""([^"]+)""/g, ':"$1"')
+    const parseString = JSON.parse(removeBackSlashes)
+    return parseString;
+}
+const formatDate = (unFormateDate:string,splitCharacter: "/" | ":" | "-" | "." | " " = "/") => {
+    //formatDate("20220202")
+    //splitCharacter =>  / or - or . or space
+    const date = unFormateDate ? moment(unFormateDate, 'YYYYMMDD').format(`YYYY${splitCharacter}MM${splitCharacter}DD`) : "-";
+    return date
+};
 export {
     hashText,
     generateToken,
     generateOTP,
     trimText,
     verifyToken,
-    generateQRCode
+    generateQRCode,
+    handleStringifyValueResponse,
+    formatDate
 }
