@@ -81,7 +81,11 @@ const  InsertSplitCharInMiddle = (str:string, splitCharacter:splitCharacterType 
     
     return `${firstHalf}${splitCharacter}${secondHalf}`;
 }
+
 const replaceEngDigitsToArDigits = (str:string | number) => str.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+const concatenateText = (groupOfText:Array<string>,splitedCharacter:splitCharacterType = " "): string => groupOfText.map(text => text.trim()).join(splitedCharacter);
+
 
 export {
     hashText,
@@ -93,5 +97,6 @@ export {
     handleStringifyValueResponse,
     formatDate,
     InsertSplitCharInMiddle,
-    replaceEngDigitsToArDigits
+    replaceEngDigitsToArDigits,
+    concatenateText
 }
