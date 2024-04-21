@@ -1,0 +1,7 @@
+
+type splitCharacterType = "/" | ":" | "-" | "." | " ";
+
+
+
+
+export { splitCharacterType }

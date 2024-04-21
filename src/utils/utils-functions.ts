@@ -7,6 +7,7 @@ import User from '../DB/models/users';
 import errorMsg from './messages/errorMsg';
 import * as QRCode from 'qrcode';
 import moment from 'moment';
+import { splitCharacterType } from '../interfaces/utils.interface';
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex');
 }
@@ -64,12 +65,24 @@ const handleStringifyValueResponse = (stringValue:string) => {
     const parseString = JSON.parse(removeBackSlashes)
     return parseString;
 }
-const formatDate = (unFormateDate:string,splitCharacter: "/" | ":" | "-" | "." | " " = "/") => {
+const formatDate = (unFormateDate:string,splitCharacter: splitCharacterType = "/") => {
     //formatDate("20220202")
     //splitCharacter =>  / or - or . or space
     const date = unFormateDate ? moment(unFormateDate, 'YYYYMMDD').format(`YYYY${splitCharacter}MM${splitCharacter}DD`) : "-";
     return date
 };
+const  InsertSplitCharInMiddle = (str:string, splitCharacter:splitCharacterType = "-") => {
+    if(str.includes(splitCharacter)) return str;
+    const length = str.length;
+    const middleIndex = Math.floor(length / 2);
+    // Insert special character in the middle
+    const firstHalf = str.substring(0, middleIndex);
+    const secondHalf = str.substring(middleIndex);
+    
+    return `${firstHalf}${splitCharacter}${secondHalf}`;
+}
+const replaceEngDigitsToArDigits = (str:string | number) => str.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
 export {
     hashText,
     generateToken,
@@ -78,5 +91,7 @@ export {
     verifyToken,
     generateQRCode,
     handleStringifyValueResponse,
-    formatDate
+    formatDate,
+    InsertSplitCharInMiddle,
+    replaceEngDigitsToArDigits
 }
