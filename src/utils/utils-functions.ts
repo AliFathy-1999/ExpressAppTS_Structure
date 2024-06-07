@@ -60,9 +60,8 @@ const generateQRCode = async (qrCodeContent:any) => {
 }
 const handleStringifyValueResponse = (stringValue:string) => {
     //Example
-    // stringValue = "{\\people\\:{\\persons\\:[{\\id\\:\\\"123\\\",\\name\\:\\\"علي احمد \\\",\\age\\:\\\"22\\\",\\salary\\:\\\"500\\\"},{\\id\\:\\\"456\\\",\\name\\:\\\"حسام\\\",\\age\\:\\\"30\\\",\\salary\\:\\\"1000\\\"},{\\id\\:\\\"789\\\",\\name\\:\\\"حامد\\\",\\age\\:\\\"48\\\",\\salary\\:\\\"6000\\\"}]}}"
-    const removeBackSlashes = stringValue?.replace(/\\/g, '"')?.replace(/:""([^"]+)""/g, ':"$1"')
-    const parseString = JSON.parse(removeBackSlashes)
+    // stringValue = "{\people\:{\persons\:[{\id\\:\"123\",\name\:\"علي احمد \",\age\:\"22\",\salary\:\"500\"},{\id\:\"456\",\name\:\"حسام\",\age\:\"30\",\salary\:\"1000\"}]}}"
+    const parseString = JSON.parse(stringValue)
     return parseString;
 }
 const formatDate = (unFormateDate:string,splitCharacter: splitCharacterType = "/") => {
@@ -86,6 +85,7 @@ const replaceEngDigitsToArDigits = (str:string | number) => str.toString().repla
 
 const concatenateText = (groupOfText:Array<string>,splitedCharacter:splitCharacterType = " "): string => groupOfText.map(text => text.trim()).join(splitedCharacter);
 
+const formatDateLocale = (date:Date, locale:string= 'en-US') => new Intl.DateTimeFormat(locale).format(date);
 
 export {
     hashText,
@@ -98,5 +98,6 @@ export {
     formatDate,
     InsertSplitCharInMiddle,
     replaceEngDigitsToArDigits,
-    concatenateText
+    concatenateText,
+    formatDateLocale
 }
