@@ -16,6 +16,8 @@ router.post('/login', validate(usersValidator.signIn), asyncWrapper(authControll
 router.get('/profile', Auth, asyncWrapper(authController.getProfile))
 router.patch('/activate/:token', asyncWrapper(authController.activateAccount))
 router.post('/resendEmail', asyncWrapper(authController.resendEmail))
+router.get('/refresh-token', asyncWrapper(authController.refreshAccessToken))
+router.patch('/logout', Auth, asyncWrapper(authController.logout))
 
 
 export default router;

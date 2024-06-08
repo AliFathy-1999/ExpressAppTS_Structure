@@ -16,7 +16,7 @@ router.delete('/:id', adminAuth, asyncWrapper(userController.deleteUser))
 router.patch('/', Auth, upload, validate(usersValidator.signUp), asyncWrapper(userController.updateUser))
 router.get('/search', validate(searchValidator),asyncWrapper(userController.searchUsers))
 
-router.get('/', asyncWrapper(userController.getUsers))
+router.get('/',adminAuth, asyncWrapper(userController.getUsers))
 router.get('/qrcode', asyncWrapper(userController.getQrCode))
 
 router.get('/:id', Auth, asyncWrapper(userController.getUserById))

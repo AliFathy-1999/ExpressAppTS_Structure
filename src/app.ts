@@ -3,6 +3,7 @@ import cors from "cors";
 import  morgan from 'morgan';
 import helmet from 'helmet';
 import sanitizer from 'express-sanitizer';
+import cookieParser from 'cookie-parser';
 
 import  limiter from './utils/rate-limiter'
 import {ApiError, handleResponseError} from './lib/index'
@@ -24,6 +25,8 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(limiter);
 app.use(sanitizer());
+app.use(cookieParser());
+
 //SSR 
 app.set('view engine', 'ejs');
 app.set('templates', path.join(__dirname, 'templates'));

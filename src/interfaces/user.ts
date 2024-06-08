@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import { Document, ObjectId } from 'mongoose';
 
 enum Role {
@@ -10,19 +11,29 @@ enum ORDER {
   DESC = -1,
 }
 
-  interface IUser extends Document{
-      _id: ObjectId;
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      userName: string;
-      activated: boolean;
-      activatedToken: string;
-      pImage?: string;
-      role: Role;
-      comparePassword(password: string): Promise<Boolean>;
-  }
+enum TOKEN_TYPE {
+  ACCESS_TOKEN = 'ACCESS_TOKEN',
+  REFRESH_TOKEN = 'REFRESH_TOKEN'
+}
+interface IUser extends Document{
+    _id: ObjectId;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    userName: string;
+    verified: boolean;
+    activatedToken: string;
+    pImage?: string;
+    role: Role;
+    comparePassword(password: string): Promise<Boolean>;
+}
+interface IUserPayload extends JwtPayload{
+  userId: string;
+  email: string;
+  verified?: boolean;
+  role: Role;
+}
 
 
-export { IUser, Role, ORDER }
+export { IUser, IUserPayload, Role, ORDER, TOKEN_TYPE }

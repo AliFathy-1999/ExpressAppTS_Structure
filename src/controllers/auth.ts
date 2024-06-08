@@ -11,25 +11,55 @@ import { userServices } from '../services';
 import { StatusCodes } from 'http-status-codes';
 import renderTemplate from '../utils/renderTemplate';
 import sendEmail from '../utils/sendEmail';
+import { IUserPayload, TOKEN_TYPE } from '../interfaces/user';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 
 const signIn = async (req:Request, res:Response, next:NextFunction) => {
         const { body : { email, password }} = req
         const user = await userServices.getUserService({email});
+        const userPayload: IUserPayload = {
+            userId: String(user._id),
+            email: user.email,
+            role: user.role,
+            verified: user.verified
+        }
         if (!user) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.UNAUTHORIZED);
         
         const passwordMatch = await user.comparePassword(password);
         if (!passwordMatch) throw new ApiError(errorMsg.IncorrectField('Password'), StatusCodes.UNAUTHORIZED);        
 
-        if(user.activated === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
+        if(user.verified === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
         infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl} `)
-        res.status(StatusCodes.OK).json({
+        res
+        .status(StatusCodes.OK)
+        .cookie('refreshToken', generateToken(userPayload,TOKEN_TYPE.REFRESH_TOKEN), { httpOnly: true, sameSite: 'strict' })
+        .json({
             status:'success',
             message : successMsg.signIn(user.userName),
-            token: generateToken(user),
+            accessToken: generateToken(userPayload),
             data : user,
         });        
 }
+const refreshAccessToken = async (req:Request, res:Response, next:NextFunction) => {
+    const refreshToken = req.cookies['refreshToken'];    
+    if(!refreshToken) throw new ApiError('Access Denied. No refresh token provided.', StatusCodes.UNAUTHORIZED)
+    const decodedRefreshToken = jwt.verify(refreshToken, process.env.AUTH_REFRESH_TOKEN_SECRET) as IUserPayload;
+    const accessToken = generateToken(decodedRefreshToken) 
+    infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl} `)
+    res.status(StatusCodes.OK).header('Authorization',`Brearer ${accessToken}`).json({
+        accessToken
+    })
+}
+const logout = async (req:Request, res:Response, next:NextFunction) => {
+    const refreshToken = req.cookies['refreshToken'];    
+    if(!refreshToken) throw new ApiError('Access Denied. No refresh token provided.', StatusCodes.UNAUTHORIZED)
+    res.status(StatusCodes.OK)
+    .clearCookie('refreshToken').json({
+        message: "logout successfully"
+    })
+}
+
 const register = async (req: Request, res: Response, next: NextFunction) => {  
         
         // const images : IFiles = req.files as IFiles;
@@ -79,7 +109,7 @@ const activateAccount = async (req:Request, res:Response, next:NextFunction) => 
     if(!token) throw new ApiError(errorMsg.IncorrectField('Token'), StatusCodes.BAD_REQUEST);
     if(!email) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.BAD_REQUEST);
 
-    const updateUser = await userServices.updateUserService( { email, activaredToken: token }, { activated: true });
+    const updateUser = await userServices.updateUserService( { email, activaredToken: token }, { verified: true });
     if(!updateUser) throw new ApiError(errorMsg.NotFound('User',`${email}`,'Email'), StatusCodes.BAD_REQUEST);
     if(updateUser) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
     res.status(StatusCodes.OK).json({
@@ -93,7 +123,7 @@ const resendEmail = async (req:Request, res:Response, next:NextFunction) => {
     if(!email) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.BAD_REQUEST);
     const user = await userServices.getUserService({email});
     if(!user) throw new ApiError(errorMsg.NotFound('User',`${email}`,'Email'), StatusCodes.BAD_REQUEST);
-    if(user.activated === true) throw new ApiError(errorMsg.userAlreadyVerified, StatusCodes.OK);
+    if(user.verified === true) throw new ApiError(errorMsg.userAlreadyVerified, StatusCodes.OK);
     const emailBody = {
         subject: 'Activate Your Email',
         text: 'Activate Your Email',
@@ -106,10 +136,13 @@ const resendEmail = async (req:Request, res:Response, next:NextFunction) => {
         message: successMsg.resendEmail(email),
     })
 }
+
 export default {
     register,
     signIn,
     getProfile,
     activateAccount,
-    resendEmail
+    resendEmail,
+    refreshAccessToken,
+    logout
 }

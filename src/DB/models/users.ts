@@ -75,7 +75,7 @@ const schema = new Schema<IUser>({
       type: String,
       default: 'https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png',
     }],
-    activated:{
+    verified:{
       type:Boolean,
       default: false,
     },
