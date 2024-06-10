@@ -9,12 +9,14 @@ const schema = new Schema<IPost>({
     },
     content: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     author: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        ref: "User"
     },
 }, {
     timestamps: true,
