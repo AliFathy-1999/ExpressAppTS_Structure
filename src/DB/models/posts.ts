@@ -23,5 +23,5 @@ const schema = new Schema<IPost>({
     versionKey: false,
 })
 
-
-export default model<IPost>('Post', schema)
+const Post = model<IPost>('Post', schema)
+export default Post;

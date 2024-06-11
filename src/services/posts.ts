@@ -2,7 +2,10 @@ import Post from '../DB/models/posts';
 import { IPost } from '../interfaces/posts';
 
 
-const getPostService = async (filterBy: { [key:string] : any}) : Promise<Array<IPost>> => await Post.find(filterBy); 
+const getPostService = async (filterBy: { [key:string] : any}, cacheFlag: boolean = false) : Promise<Array<IPost>> => {
+    if(cacheFlag) return await Post.find(filterBy).cache().exec()
+    return await Post.find(filterBy)
+}; 
 
 const createPostService = async (postData: Partial<IPost>) : Promise<IPost>=> await Post.create(postData);
 
