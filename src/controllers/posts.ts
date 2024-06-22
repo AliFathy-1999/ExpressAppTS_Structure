@@ -8,6 +8,7 @@ import { Post, postType } from '../DB/models/posts';
 import { ApiError } from '../lib';
 import errorMsg from '../utils/messages/errorMsg';
 import { cacheOption } from '../interfaces/utils.interface';
+import { clearCache } from '../utils/cache.utils';
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
     const {
@@ -18,8 +19,12 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
         }
     } = req;
     const post = await postServices.createPostService({ author: _id, title, content });
-    if (post) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
-    res.status(StatusCodes.OK).json({
+    if (post) {
+        const hashKey = _id
+        clearCache(hashKey)
+        infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
+    }    
+res.status(StatusCodes.OK).json({
         status: 'success',
         message: successMsg.created('Posts'),
         data: post
@@ -28,7 +33,7 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
     const { user: { _id } } = req;
-    const posts = await postServices.getPostService({author: _id },cacheOption.USE_CACHE)
+    const posts = await postServices.getPostService({author: _id },_id,cacheOption.USE_CACHE)
     if(posts) infoLogger(`${req.method} | success | ${StatusCodes.OK} | ${req.protocol} | ${req.originalUrl}`)
     res.status(StatusCodes.OK).json({
         status: 'success',

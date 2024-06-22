@@ -1,10 +1,11 @@
+import { ObjectId } from 'mongoose';
 import { Post, postType } from '../DB/models/posts';
 import { IPost } from '../interfaces/posts';
 import { cacheOption } from '../interfaces/utils.interface';
 
 
-const getPostService = async (filterBy: { [key:string] : any}, cacheFlag: cacheOption = cacheOption.NO_CACHE) : Promise<Array<IPost>> => {
-    if (cacheFlag === cacheOption.USE_CACHE) return await Post.find(filterBy).cache().exec()
+const getPostService = async (filterBy: { [key:string] : any}, hashKey: string | ObjectId,cacheFlag: cacheOption = cacheOption.NO_CACHE) : Promise<Array<IPost>> => {
+    if (cacheFlag === cacheOption.USE_CACHE) return await Post.find(filterBy).cache({key: hashKey }).exec()
     return await Post.find(filterBy)
 }; 
 

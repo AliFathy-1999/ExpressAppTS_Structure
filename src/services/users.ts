@@ -4,7 +4,7 @@ import { cacheOption } from '../interfaces/utils.interface';
 
 
 const getUserService = async (filterBy: { [key:string] : any},cacheFlag: cacheOption = cacheOption.NO_CACHE) : Promise<IUser> => {
-    if(cacheFlag === cacheOption.USE_CACHE) return await User.findOne(filterBy).cache().exec()
+    if(cacheFlag === cacheOption.USE_CACHE) return await User.findOne(filterBy).cache({}).exec()
     return await User.findOne(filterBy)
 }; 
 

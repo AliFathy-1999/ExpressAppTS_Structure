@@ -9,7 +9,7 @@ import * as QRCode from 'qrcode';
 import moment from 'moment';
 import { splitCharacterType } from '../interfaces/utils.interface';
 const hashText = (text:string) => {
-    return crypto.createHash('sha256').update(text).digest('hex');
+    return crypto.createHash('sha256').update(text).digest('hex').substring(0,20);
 }
 const generateToken = (user: IUserPayload, tokenType = TOKEN_TYPE.ACCESS_TOKEN)=>{
     const { 
