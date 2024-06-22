@@ -1,15 +1,16 @@
-import Post from '../DB/models/posts';
+import { Post, postType } from '../DB/models/posts';
 import { IPost } from '../interfaces/posts';
+import { cacheOption } from '../interfaces/utils.interface';
 
 
-const getPostService = async (filterBy: { [key:string] : any}, cacheFlag: boolean = false) : Promise<Array<IPost>> => {
-    if(cacheFlag) return await Post.find(filterBy).cache().exec()
+const getPostService = async (filterBy: { [key:string] : any}, cacheFlag: cacheOption = cacheOption.NO_CACHE) : Promise<Array<IPost>> => {
+    if (cacheFlag === cacheOption.USE_CACHE) return await Post.find(filterBy).cache().exec()
     return await Post.find(filterBy)
 }; 
 
 const createPostService = async (postData: Partial<IPost>) : Promise<IPost>=> await Post.create(postData);
 
-const updatePostService = async (filterBy: { [key:string] : any}, updateData: { [key:string] : any}) : Promise<IPost> => await Post.findOneAndUpdate(filterBy, updateData, {runValidation: true, new : true});
+const updatePostService = async (filterBy: { [key:string] : any}, updateData: Partial<postType>) : Promise<postType> => await Post.findOneAndUpdate(filterBy, updateData, {runValidation: true, new : true});
 
 const deletePostService = async (filterBy: { [key:string] : any}) : Promise<IPost> => await Post.findOneAndDelete(filterBy);
 

@@ -3,7 +3,7 @@ import { IUser, IUserPayload, TOKEN_TYPE } from '../interfaces/user';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { ApiError } from '../lib';
 import { StatusCodes } from 'http-status-codes';
-import User from '../DB/models/users';
+import { User } from '../DB/models/users';
 import errorMsg from './messages/errorMsg';
 import * as QRCode from 'qrcode';
 import moment from 'moment';

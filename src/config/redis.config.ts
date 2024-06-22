@@ -40,7 +40,7 @@ Query.prototype.exec = async function() {
                 : new this.model(doc)
     }
     const result = await exec.apply(this);
-    redisClient.set(key, JSON.stringify(result));
+    redisClient.set(key, JSON.stringify(result),'EX',+process.env.REDIS_CACHE_EXP_TIME);
     return result;
 };
 

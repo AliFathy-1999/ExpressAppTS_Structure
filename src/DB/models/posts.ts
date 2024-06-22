@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { InferSchemaType, Schema, model } from 'mongoose';
 import { IPost } from '../../interfaces/posts';
 
 const schema = new Schema<IPost>({
@@ -22,6 +22,8 @@ const schema = new Schema<IPost>({
     timestamps: true,
     versionKey: false,
 })
+// schema.index({ author: 'text', title: 'text' }, { unique: true })
 
 const Post = model<IPost>('Post', schema)
-export default Post;
+type postType = InferSchemaType<typeof schema>;
+export { Post, postType };
