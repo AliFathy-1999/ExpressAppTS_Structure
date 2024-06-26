@@ -2,9 +2,11 @@ import Redis from 'ioredis'
 import { Query } from 'mongoose';
 import util from 'util';
 
+
 const redisClient = new Redis({
     host: process.env.REDIS_HOST,
-    port: +process.env.REDIS_PORT
+    port: +process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD
 });
 
 // redisClient.get = util.promisify(redisClient.get)
