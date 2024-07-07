@@ -31,6 +31,11 @@ app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.set('templates', path.join(__dirname, 'templates'));
 
+app.use('/', ( req:Request, res:Response, next:NextFunction ) => {
+    res.status(StatusCodes.OK).json({
+        "status": "up"
+    })
+})
 app.use('/api/', router);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
