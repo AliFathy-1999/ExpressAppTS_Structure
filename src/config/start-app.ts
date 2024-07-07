@@ -7,6 +7,7 @@ const startExpressApp = (app :Application) =>{
     app.listen( port || 4000, () => {
         redisClient.on('error', (err) => {
             console.error('Redis connection error:', err);
+            process.exit(0);
         });
         
         // If the connection is successful
