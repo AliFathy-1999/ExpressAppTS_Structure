@@ -7,6 +7,7 @@ import { ApiError } from '../lib';
 import { IUser, Role } from '../interfaces/user';
 import { verifyToken } from '../utils/utils-functions';
 import errorMsg from '../utils/messages/errorMsg';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 
 
@@ -17,6 +18,7 @@ const checkUserRole = (role: Role[] ) => {
       if (!bearerToken) 
         throw new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED);
       const result = await verifyToken(bearerToken) as IUser;
+      console.log('result:', result)
       if(result.verified === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
       // if (role === Role.BOTH) {        
       //   req.user = result;
@@ -32,6 +34,8 @@ const checkUserRole = (role: Role[] ) => {
       req.user = result as IUser;
       next();
     } catch (err) {
+    console.log('err:', err)
+
       next(err);
     }
   };

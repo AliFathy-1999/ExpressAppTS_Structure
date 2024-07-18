@@ -7,7 +7,10 @@ import { User } from '../DB/models/users';
 import errorMsg from './messages/errorMsg';
 import * as QRCode from 'qrcode';
 import moment from 'moment';
-import { splitCharacterType } from '../interfaces/utils.interface';
+import { CustomResponse, splitCharacterType } from '../interfaces/utils.interface';
+import { parse, stringify } from 'circular-json';
+import { Response } from 'express';
+
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex').substring(0,20);
 }
@@ -99,6 +102,57 @@ const concatenateText = (groupOfText:Array<string>,splitedCharacter:splitCharact
 
 const formatDateLocale = (date:Date, locale:string= 'en-US') => new Intl.DateTimeFormat(locale).format(date);
 
+const orderObject = <T>(unOrderedObject: { [key:string]: any }, keyOrder: Array<string>): T => {
+    const orderedObj: { [key: string]: any } = {};
+    keyOrder.forEach(key => {
+    if (unOrderedObject.hasOwnProperty(key)) {
+        orderedObj[key] = unOrderedObject[key];
+    }
+    });
+    return orderedObj as T;
+}
+
+const removeFalsyValues = <T>(obj: { [key:string] : any }) => {
+    const result = {};
+    for (const key in obj) {
+            if ( obj[key] && !(typeof obj[key] == "object" && Object.keys(obj[key]).length == 0)) {
+                result[key] = obj[key];
+        }
+    }
+        
+    return result as T;
+}
+
+const removeSensitiveData = (data: any, sensitiveKeys: string[]): any => {
+    if (typeof data !== 'object' || data === null) {
+        return data;
+    }
+    const flatData = parse(stringify(data));
+
+
+    if (Array.isArray(data)) {
+        return data.map(item => removeSensitiveData(item, sensitiveKeys));
+    }
+
+    const sanitizedData: any = {};
+    for (const key in flatData) {
+        if (typeof key == "string" && sensitiveKeys.includes(key)  ) {
+            sanitizedData[key] = '[REDACTED]';
+        } 
+        else {
+            sanitizedData[key] = removeSensitiveData(flatData[key], sensitiveKeys);
+        }
+    }
+
+    return sanitizedData;
+};
+
+const setSuccessFlag = (res: CustomResponse, body: any) => {
+    res.success = res.statusCode >= 200 && res.statusCode < 300;
+    body.success = res.success;
+    return body;
+};
+
 export {
     hashText,
     generateToken,
@@ -111,5 +165,9 @@ export {
     InsertSplitCharInMiddle,
     replaceEngDigitsToArDigits,
     concatenateText,
-    formatDateLocale
+    formatDateLocale,
+    removeFalsyValues,
+    orderObject,
+    removeSensitiveData,
+    setSuccessFlag
 }
