@@ -6,6 +6,7 @@ import errorMsg from '../utils/messages/errorMsg';
 import { StatusCodes } from 'http-status-codes';
 import { ErrorType } from '../interfaces/utils.interface';
 import { JsonWebTokenError, VerifyCallback, TokenExpiredError } from 'jsonwebtoken';
+import UnauthenticatedError from './unauthenticatedException';
 
 
 const handleMogooseValidationError = (err: mongoose.Error.ValidationError | DuplicateKeyError) => {
@@ -16,11 +17,11 @@ const handleMogooseValidationError = (err: mongoose.Error.ValidationError | Dupl
 
 const handleJwtError = (err: JsonWebTokenError) => {
   if(err instanceof TokenExpiredError){
-    return new ApiError("Token has been expired, please login again", StatusCodes.UNAUTHORIZED, ErrorType.JWT);
+    return new UnauthenticatedError("Token has been expired, please login again", ErrorType.JWT);
   } else if(err.message == "invalid signature"){
-    return new ApiError("Invalid token, provide valid signature", StatusCodes.UNAUTHORIZED, ErrorType.JWT);
+    return new UnauthenticatedError("Invalid token, provide valid signature", ErrorType.JWT);
   }
-    return new ApiError("Invalid token", StatusCodes.UNAUTHORIZED, ErrorType.JWT);
+    return new UnauthenticatedError("Invalid token", ErrorType.JWT);
 };
 
 export const handleResponseError = (err: any, req: Request, res: Response, next: NextFunction) => {
@@ -36,7 +37,6 @@ export const handleResponseError = (err: any, req: Request, res: Response, next:
 
   //Don't log any error in case of validation error or token error
   if(err.status !== ErrorType.VALIDATION && err.status !== ErrorType.JWT){
-  console.log('err.status:', err.status)
     errorLogger(req,res)
   }
 };

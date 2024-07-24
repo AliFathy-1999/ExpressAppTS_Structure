@@ -8,8 +8,8 @@ import clearCacheMW from '../middlewares/clearCache';
 
 const router = Router();
 
-router.post('/',userAuth,  validate(postsValidator.createPost),clearCacheMW, asyncWrapper(postController.createPost))
+router.post('/',checkUserAuthenticated,userAuth,  validate(postsValidator.createPost),clearCacheMW, asyncWrapper(postController.createPost))
 router.patch('/:id', checkUserAuthenticated,validate(postsValidator.updatePost), clearCacheMW, asyncWrapper(postController.updatePost))
-router.get('/',userAuth, asyncWrapper(postController.getPosts))
+router.get('/', checkUserAuthenticated, userAuth, asyncWrapper(postController.getPosts))
 
 export default router;

@@ -104,9 +104,9 @@ const logger: Logger = createLogger({
     ],
 });
 
-logger.exceptions.handle(
-    new transports.File({ filename: './logs/exceptions.log' })
-);
+// logger.exceptions.handle(
+//     new transports.File({ filename: './logs/exceptions.log' })
+// );
 const errorLogger = (req:Request,res:Response) => {
     const logsObjData = createLogData(req, res);
     logger.error(logsFormat(logsObjData));

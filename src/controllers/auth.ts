@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { ApiError } from '../lib';
 import successMsg from '../utils/messages/successMsg';
 import errorMsg from '../utils/messages/errorMsg';
 
@@ -10,19 +9,23 @@ import { StatusCodes } from 'http-status-codes';
 import renderTemplate from '../utils/renderTemplate';
 import sendEmail from '../utils/sendEmail';
 import { IUserPayload, TOKEN_TYPE } from '../interfaces/user';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { cacheOption } from '../interfaces/utils.interface';
+import UnauthorizedError from '../lib/unAuthorizedException';
+import UnauthenticatedError from '../lib/unauthenticatedException';
+import BadRequestError from '../lib/badRequestException';
+import ConflictError from '../lib/confilctException';
 
 
 const signIn = async (req:Request, res:Response, next:NextFunction) => {
         const { body : { email, password }} = req
         const user = await userServices.getUserService({email});
         
-        if (!user) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.UNAUTHORIZED);
+        if (!user) throw new UnauthenticatedError(errorMsg.IncorrectField('Email'));
     
         
         const passwordMatch = await user.comparePassword(password);
-        if (!passwordMatch) throw new ApiError(errorMsg.IncorrectField('Password'), StatusCodes.UNAUTHORIZED);        
+        if (!passwordMatch) throw new UnauthenticatedError(errorMsg.IncorrectField('Password'));        
         
         const userPayload: IUserPayload = {
             userId: String(user._id),
@@ -30,7 +33,7 @@ const signIn = async (req:Request, res:Response, next:NextFunction) => {
             role: user.role,
             verified: user.verified
         }
-        if(user.verified === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
+        if(user.verified === false) throw new UnauthenticatedError(errorMsg.unverifiedUser);
         res
         .status(StatusCodes.OK)
         .cookie('refreshToken', generateToken(userPayload,TOKEN_TYPE.REFRESH_TOKEN), { httpOnly: true, sameSite: 'strict' })
@@ -43,7 +46,7 @@ const signIn = async (req:Request, res:Response, next:NextFunction) => {
 }
 const refreshAccessToken = async (req:Request, res:Response, next:NextFunction) => {
     const refreshToken = req.cookies['refreshToken'];    
-    if(!refreshToken) throw new ApiError('Access Denied. No refresh token provided.', StatusCodes.UNAUTHORIZED)
+    if(!refreshToken) throw new UnauthorizedError('Access Denied. No refresh token provided.')
     const decodedRefreshToken = jwt.verify(refreshToken, process.env.AUTH_REFRESH_TOKEN_SECRET) as IUserPayload;
     const accessToken = generateToken(decodedRefreshToken) 
     res.status(StatusCodes.OK).header('Authorization',`Brearer ${accessToken}`).json({
@@ -52,7 +55,7 @@ const refreshAccessToken = async (req:Request, res:Response, next:NextFunction) 
 }
 const logout = async (req:Request, res:Response, next:NextFunction) => {
     const refreshToken = req.cookies['refreshToken'];    
-    if(!refreshToken) throw new ApiError('Access Denied. No refresh token provided.', StatusCodes.UNAUTHORIZED)
+    if(!refreshToken) throw new UnauthorizedError('Access Denied. No refresh token provided.')
     res.status(StatusCodes.OK)
     .clearCookie('refreshToken').json({
         message: "logout successfully"
@@ -65,7 +68,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
         const images = req.files as Express.Multer.File[];
         if (req.files?.length === 1) 
-            throw new ApiError(errorMsg.fileCount(1), StatusCodes.BAD_REQUEST);
+            throw new BadRequestError(errorMsg.fileCount(1));
         const pImage : Array<string> = images?.map((file)=> file.filename)
 
         // req.file? req['files'].filename : undefined    
@@ -80,7 +83,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
         const user = await userServices.createUserService({ firstName, lastName, userName, email, password, pImage, role, activaredToken: token });
         
-        if(!user) throw new ApiError(errorMsg.customMsg('Error in user registration'), StatusCodes.BAD_REQUEST);
+        if(!user) throw new BadRequestError(errorMsg.customMsg('Error in user registration'));
         const emailTemplate = await renderTemplate({ firstName, token }, 'activateAccount') 
         await sendEmail( email, emailBody.subject, emailTemplate);
 
@@ -101,22 +104,22 @@ const getProfile =async (req:Request, res:Response, next:NextFunction) => {
 const activateAccount = async (req:Request, res:Response, next:NextFunction) => {
     const { email } = req.query;
     const { token } = req.params;
-    if(!token) throw new ApiError(errorMsg.IncorrectField('Token'), StatusCodes.BAD_REQUEST);
-    if(!email) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.BAD_REQUEST);
+    if(!token) throw new BadRequestError(errorMsg.IncorrectField('Token'));
+    if(!email) throw new BadRequestError(errorMsg.IncorrectField('Email'));
 
     const updateUser = await userServices.updateUserService( { email, activaredToken: token }, { verified: true });
-    if(!updateUser) throw new ApiError(errorMsg.NotFound('User',`${email}`,'Email'), StatusCodes.BAD_REQUEST);
-    res.status(StatusCodes.OK).json({
+    if(!updateUser) throw new BadRequestError(errorMsg.NotFound('User',`${email}`,'Email'));
+    res.status(StatusCodes.ACCEPTED).json({
         message: successMsg.activateAccount(email as string),
         data : updateUser
     })
 }
 const resendEmail = async (req:Request, res:Response, next:NextFunction) => {
     const { email } = req.body;
-    if(!email) throw new ApiError(errorMsg.IncorrectField('Email'), StatusCodes.BAD_REQUEST);
+    if(!email) throw new BadRequestError(errorMsg.IncorrectField('Email'));
     const user = await userServices.getUserService({email});
-    if(!user) throw new ApiError(errorMsg.NotFound('User',`${email}`,'Email'), StatusCodes.BAD_REQUEST);
-    if(user.verified === true) throw new ApiError(errorMsg.userAlreadyVerified, StatusCodes.OK);
+    if(!user) throw new BadRequestError(errorMsg.NotFound('User',`${email}`,'Email'));
+    if(user.verified === true) throw new ConflictError(errorMsg.userAlreadyVerified);
     const emailBody = {
         subject: 'Activate Your Email',
         text: 'Activate Your Email',

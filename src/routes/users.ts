@@ -13,11 +13,11 @@ import clearCacheMW from '../middlewares/clearCache';
 
 const router = Router();
 
-router.delete('/:id', adminAuth, clearCacheMW, asyncWrapper(userController.deleteUser))
+router.delete('/:id', checkUserAuthenticated,adminAuth, clearCacheMW, asyncWrapper(userController.deleteUser))
 router.patch('/', checkUserAuthenticated, upload, validate(usersValidator.signUp), clearCacheMW, asyncWrapper(userController.updateUser))
 router.get('/search', validate(searchValidator),asyncWrapper(userController.searchUsers))
 
-router.get('/',adminAuth, asyncWrapper(userController.getUsers))
+router.get('/',checkUserAuthenticated,adminAuth, asyncWrapper(userController.getUsers))
 router.get('/qrcode', asyncWrapper(userController.getQrCode))
 
 router.get('/:id', checkUserAuthenticated, asyncWrapper(userController.getUserById))

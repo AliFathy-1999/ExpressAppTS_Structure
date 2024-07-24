@@ -4,6 +4,7 @@ import { Schema, ValidationError } from "joi";
 import { ApiError } from "../lib";
 import { StatusCodes } from "http-status-codes";
 import { ErrorType } from "../interfaces/utils.interface";
+import BadRequestError from "../lib/badRequestException";
 
 const validate = (schema: { [key: string]: Schema }) => async (req:Request, res:Response, next:NextFunction) => {
   const validationErr = [];
@@ -16,7 +17,7 @@ const validate = (schema: { [key: string]: Schema }) => async (req:Request, res:
     }
   });
   if (validationErr.length) {
-    next(new ApiError(validationErr[0].details[0].message, StatusCodes.BAD_REQUEST, ErrorType.VALIDATION));
+    next(new BadRequestError(validationErr[0].details[0].message, ErrorType.VALIDATION));
   } else {
     next();
   }
