@@ -37,7 +37,7 @@ export const handleResponseError = (err: any, req: Request, res: Response, next:
 
   //Don't log any error in case of validation error or token error
   if(err.status !== ErrorType.VALIDATION && err.status !== ErrorType.JWT){
-    errorLogger(req,res)
+    errorLogger({ req,res })
   }
 };
 

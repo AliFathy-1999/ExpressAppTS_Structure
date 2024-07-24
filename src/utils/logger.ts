@@ -107,9 +107,14 @@ const logger: Logger = createLogger({
 // logger.exceptions.handle(
 //     new transports.File({ filename: './logs/exceptions.log' })
 // );
-const errorLogger = (req:Request,res:Response) => {
-    const logsObjData = createLogData(req, res);
-    logger.error(logsFormat(logsObjData));
+const errorLogger = (arg: string | IloggerParams, source: string = process.env.SERVER_NAME ) => {
+    if (typeof arg === 'string') {
+        logger.error({ message: arg, source });
+    }else {
+        const { req, res, serviceName, elapsed } = arg as any
+        const logsObjData = createLogData(req, res, serviceName, elapsed);
+        logger.error(logsFormat(logsObjData));
+    }
 }
 const warnLogger = (message: string, source: string = process.env.SERVER_NAME) => {
     logger.log("warn", { source, message  } );
