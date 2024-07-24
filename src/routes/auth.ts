@@ -7,16 +7,16 @@ import { asyncWrapper } from '../lib';
 import { authController } from '../controllers';
 
 import { upload } from '../utils/upload-files-utils';
-import { Auth } from '../middlewares/auth';
+import { adminAuth, checkUserAuthenticated } from '../middlewares/auth';
 
 const router = Router()
 router.post('/register', upload, validate(usersValidator.signUp), asyncWrapper(authController.register))
 router.post('/login', validate(usersValidator.signIn),asyncWrapper(authController.signIn))
-router.get('/profile', Auth, asyncWrapper(authController.getProfile))
+router.get('/profile', checkUserAuthenticated, asyncWrapper(authController.getProfile))
 router.patch('/activate/:token', asyncWrapper(authController.activateAccount))
 router.post('/resendEmail', asyncWrapper(authController.resendEmail))
 router.get('/refresh-token', asyncWrapper(authController.refreshAccessToken))
-router.patch('/logout', Auth, asyncWrapper(authController.logout))
+router.patch('/logout', asyncWrapper(authController.logout))
 
 
 export default router;

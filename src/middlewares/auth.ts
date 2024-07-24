@@ -7,43 +7,42 @@ import { ApiError } from '../lib';
 import { IUser, Role } from '../interfaces/user';
 import { verifyToken } from '../utils/utils-functions';
 import errorMsg from '../utils/messages/errorMsg';
-import { TokenExpiredError } from 'jsonwebtoken';
 
+const checkUserAuthenticated = async (req:Request, res:Response, next:NextFunction) => {
+  try {
+    let token: string;
+    if( req.headers.authorization && req.headers.authorization.startsWith("Bearer") ) {
+      token = req.headers.authorization?.split(" ")[1]
+    }
+    if(!token)throw new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED);
 
+    const decoded = await verifyToken(token) as IUser;
+    if(!decoded.verified) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
+
+    req.user = decoded;
+    next();
+    
+  } catch (error) {
+      next(error);
+  }
+}
 
 const checkUserRole = (role: Role[] ) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const bearerToken = req.headers.authorization;
     try {
-      if (!bearerToken) 
-        throw new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED);
-      const result = await verifyToken(bearerToken) as IUser;
-      console.log('result:', result)
-      if(result.verified === false) throw new ApiError(errorMsg.unverifiedUser, StatusCodes.UNAUTHORIZED);
-      // if (role === Role.BOTH) {        
-      //   req.user = result;
-      //   return next();
-      // }
-      if(role.includes(result.role)) {
-        req.user = result as IUser;
-        return next()
+      const userPayload = req.user;
+      if(!role.includes(userPayload.role)) {
+        throw new ApiError(errorMsg.unAuthorized, StatusCodes.UNAUTHORIZED)
       };
-      if(!role.includes(result.role)) throw new ApiError(errorMsg.unAuthorized, StatusCodes.UNAUTHORIZED);
-      // if(result.role !== role) throw new ApiError(errorMsg.unAuthorized, StatusCodes.UNAUTHORIZED);
-
-      req.user = result as IUser;
       next();
     } catch (err) {
-    console.log('err:', err)
-
       next(err);
     }
   };
 };
-const Auth = checkUserRole(Object.values(Role))
 const userAuth = checkUserRole([Role.USER]);
 const adminAuth = checkUserRole([Role.ADMIN]);
 
-export { userAuth, adminAuth, Auth,verifyToken };
+export { userAuth, adminAuth,verifyToken, checkUserAuthenticated };
 
 

@@ -40,16 +40,15 @@ const generateToken = (user: IUserPayload, tokenType = TOKEN_TYPE.ACCESS_TOKEN)=
     )
     return token;
 }
-const verifyToken = async (bearerToken:string) : Promise<IUser | ApiError>=> {
-    bearerToken = bearerToken.split(' ')[1];
-    if(!bearerToken) return new ApiError(errorMsg.signInAgain, StatusCodes.UNAUTHORIZED); 
-    const decoded = jwt.verify(bearerToken, process.env.AUTH_ACCESS_TOKEN_SECRET) as JwtPayload;
+const verifyToken = async (token:string) : Promise<IUser | ApiError> => {
+    if(!token) return new ApiError(errorMsg.signInAgain, StatusCodes.UNAUTHORIZED); 
+    const decoded = jwt.verify(token, process.env.AUTH_ACCESS_TOKEN_SECRET) as JwtPayload;
         
     const user = await User.findById(decoded.userId);
     if(!user) return new ApiError(errorMsg.unAuthenticated, StatusCodes.UNAUTHORIZED); 
     
     return user;
-  };
+};
 const generateOTP = (noOfDigits: number) => {
     noOfDigits = noOfDigits || 6
     const digits = '0123456789';
