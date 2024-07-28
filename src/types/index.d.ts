@@ -12,6 +12,10 @@ declare global{
             File: Multer.File,
             files?: {[fieldname: string]: Multer.File[]} | Multer.File[],
         }
+        interface Response {
+            responseBody: any;
+            success: boolean;
+        }
     }
     
 }
