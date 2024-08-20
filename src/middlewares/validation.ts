@@ -4,7 +4,7 @@ import { Schema, ValidationError } from "joi";
 import { ApiError } from "../lib";
 import { StatusCodes } from "http-status-codes";
 import { ErrorType } from "../interfaces/utils.interface";
-import BadRequestError from "../lib/badRequestException";
+import { BadRequestError } from "../lib/apiError";
 
 const validate = (schema: { [key: string]: Schema }) => async (req:Request, res:Response, next:NextFunction) => {
   const validationErr = [];

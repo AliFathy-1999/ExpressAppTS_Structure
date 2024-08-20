@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { ApiError, DuplicateKeyError } from './apiError'
+import { ApiError, UnauthenticatedError } from './apiError'
 import { errorLogger } from '../utils/logger';
 import errorMsg from '../utils/messages/errorMsg';
 import { StatusCodes } from 'http-status-codes';
-import { ErrorType } from '../interfaces/utils.interface';
+import { DuplicateKeyError, ErrorType } from '../interfaces/utils.interface';
 import { JsonWebTokenError, VerifyCallback, TokenExpiredError } from 'jsonwebtoken';
-import UnauthenticatedError from './unauthenticatedException';
 
 
 const handleMogooseValidationError = (err: mongoose.Error.ValidationError | DuplicateKeyError) => {

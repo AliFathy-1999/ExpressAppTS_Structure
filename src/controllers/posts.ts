@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { postServices } from '../services';
 import errorMsg from '../utils/messages/errorMsg';
 import { cacheOption } from '../interfaces/utils.interface';
-import UnauthorizedError from '../lib/unAuthorizedException';
+import { UnauthorizedError } from '../lib/apiError';
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
     const {

@@ -13,9 +13,56 @@ class ApiError extends Error {
   }
 }
 
-interface DuplicateKeyError extends Error {
-  code: number;
-  keyValue: string[];
+class NotFoundError extends ApiError {
+  constructor(public message:string) {
+    super(message);
+    this.statusCode = StatusCodes.NOT_FOUND ;
+    this.status = getReasonPhrase(this.statusCode);
+    this.isOperational = false;
+  }
 }
 
-export {  ApiError , DuplicateKeyError };
+class UnauthenticatedError extends ApiError {
+  constructor( public message:string, status?:ErrorType) {
+    super(message);
+    this.statusCode = StatusCodes.UNAUTHORIZED;
+    this.status = status || getReasonPhrase(this.statusCode);
+    this.isOperational = false;
+  }
+}
+
+class ConflictError extends ApiError {
+  constructor( public message:string) {
+    super(message);
+    this.statusCode = StatusCodes.CONFLICT ;
+    this.status = getReasonPhrase(this.statusCode);
+    this.isOperational = false;
+  }
+}
+
+class BadRequestError extends ApiError {
+  constructor(public message: string, status?: ErrorType) {
+      super(message);
+      this.statusCode = StatusCodes.BAD_REQUEST;
+      this.status = status || getReasonPhrase(this.statusCode);
+      this.isOperational = false;
+  }
+}
+
+class UnauthorizedError extends ApiError {
+  constructor( public message:string) {
+    super(message);
+    this.statusCode = StatusCodes.FORBIDDEN ;
+    this.status = getReasonPhrase(this.statusCode);
+    this.isOperational = false;
+  }
+}
+
+export {  
+  ApiError,
+  NotFoundError,
+  UnauthenticatedError,
+  ConflictError,
+  BadRequestError,
+  UnauthorizedError
+};

@@ -7,8 +7,7 @@ import { ApiError } from '../lib';
 import { IUser, Role } from '../interfaces/user';
 import { verifyToken } from '../utils/utils-functions';
 import errorMsg from '../utils/messages/errorMsg';
-import UnauthenticatedError from '../lib/unauthenticatedException';
-import UnauthorizedError from '../lib/unAuthorizedException';
+import { UnauthenticatedError, UnauthorizedError } from '../lib/apiError';
 
 const checkUserAuthenticated = async (req:Request, res:Response, next:NextFunction) => {
   try {

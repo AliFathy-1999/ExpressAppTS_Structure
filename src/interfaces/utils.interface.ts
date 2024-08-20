@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-
+interface DuplicateKeyError extends Error {
+    code: number;
+    keyValue: string[];
+  }
 type splitCharacterType = "/" | ":" | "-" | "." | " ";
 
 enum cacheOption {
@@ -45,6 +48,7 @@ interface IloggerParams {
 }
 
 export { 
+    DuplicateKeyError,
     splitCharacterType,
     cacheOption,
     IinfoLogger,

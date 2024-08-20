@@ -11,10 +11,7 @@ import sendEmail from '../utils/sendEmail';
 import { IUserPayload, TOKEN_TYPE } from '../interfaces/user';
 import jwt from 'jsonwebtoken';
 import { cacheOption } from '../interfaces/utils.interface';
-import UnauthorizedError from '../lib/unAuthorizedException';
-import UnauthenticatedError from '../lib/unauthenticatedException';
-import BadRequestError from '../lib/badRequestException';
-import ConflictError from '../lib/confilctException';
+import { BadRequestError, ConflictError, UnauthenticatedError, UnauthorizedError } from '../lib/apiError';
 
 
 const signIn = async (req:Request, res:Response, next:NextFunction) => {

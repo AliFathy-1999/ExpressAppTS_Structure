@@ -15,7 +15,7 @@ import errorMsg from "./utils/messages/errorMsg";
 import path from "path";
 import { setSuccessFlag } from "./utils/utils-functions";
 import { CustomResponse } from "./interfaces/utils.interface";
-import NotFoundError from "./lib/notFoundException";
+import { NotFoundError } from "./lib/apiError";
 
 const app : Express = express();
 

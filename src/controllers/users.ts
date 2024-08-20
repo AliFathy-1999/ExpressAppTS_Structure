@@ -11,8 +11,7 @@ import { commonService, userServices } from '../services';
 import {generateQRCode  } from '../utils/utils-functions';
 import sendEmail from '../utils/sendEmail';
 import renderTemplate from '../utils/renderTemplate';
-import BadRequestError from '../lib/badRequestException';
-import NotFoundError from '../lib/notFoundException';
+import { BadRequestError, NotFoundError } from '../lib/apiError';
 
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,7 +39,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     const { params : { id }} = req;  
 
     const user = await userServices.getUserService({_id:id});
-    if(!user) throw new BadRequestError (errorMsg.NotFound('User', `${id}`));
+    if(!user) throw new BadRequestError(errorMsg.NotFound('User', `${id}`));
 
     const imageUrl = user.pImage;
     removeImage(imageUrl) 
@@ -63,7 +62,7 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
 const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     const { params : { id } } = req;
     const user = await userServices.getUserByIdService({ _id: id });
-    if(!user) throw new NotFoundError (errorMsg.NotFound('User', `${id}`));
+    if(!user) throw new NotFoundError(errorMsg.NotFound('User', `${id}`));
     res.status(StatusCodes.OK).json({
         message : successMsg.get('User'),
         data: user
