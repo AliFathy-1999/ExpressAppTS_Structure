@@ -28,6 +28,7 @@ const jsonFuncOverride = function (this: CustomResponse, body: any) {
 
 app.response.json = jsonFuncOverride;
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());

@@ -1,0 +1,1075 @@
+{
+	"info": {
+		"_postman_id": "f323ca62-8f56-4957-89d2-74ff5945edaf",
+		"name": "ExpressAppApis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25778699"
+	},
+	"item": [
+		{
+			"name": "User APIs",
+			"item": [
+				{
+					"name": "User Registration API",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Ali",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Test",
+									"type": "text"
+								},
+								{
+									"key": "userName",
+									"value": "alitest",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "alitest@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "@iti430S",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "pImage",
+									"type": "file",
+									"src": [
+										"/home/user/Pictures/Screenshot from 2023-10-12 18-36-03.png",
+										"/home/user/Pictures/Screenshot from 2023-10-12 18-32-34.png",
+										"/home/user/Pictures/Screenshot from 2023-10-12 18-08-14.png",
+										"/home/user/Pictures/Screenshot from 2023-10-12 18-36-03.png",
+										"/home/user/Pictures/Screenshot from 2024-07-21 11-50-26.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localURL}}/auth/register",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"    pm.environment.set(\"jwt\", pm.response.json().accessToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"aliahmedfathi@gmail.com\",\r\n    \"password\":\"@iti43OS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:4000/api/v1/auth/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login API Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"    pm.environment.set(\"jwt\", pm.response.json().accessToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"aliahmedfathi11@gmail.com\",\r\n    \"password\":\"@iti430S\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newPassword\":\"@iti43OS\",\r\n    \"password\":\"@Ali1999\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/v1/users/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/posts/",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"posts",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "select",
+									"value": "_id, firstName",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Users",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/v1/users/?page=2&limit=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1160"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"488-ScH1dtDYfQCg4zBXLnMd4aiPmM8\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 13 Aug 2023 22:40:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"users\": {\n        \"docs\": [\n            {\n                \"_id\": \"64d91e606d94c0afb54a2a64\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199910\",\n                \"email\": \"ali10@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:08.502Z\",\n                \"updatedAt\": \"2023-08-13T18:18:08.502Z\"\n            },\n            {\n                \"_id\": \"64d91e686d94c0afb54a2a66\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199911\",\n                \"email\": \"ali11@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:16.573Z\",\n                \"updatedAt\": \"2023-08-13T18:18:16.573Z\"\n            },\n            {\n                \"_id\": \"64d91e716d94c0afb54a2a68\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199913\",\n                \"email\": \"ali13@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:25.353Z\",\n                \"updatedAt\": \"2023-08-13T18:18:25.353Z\"\n            }\n        ],\n        \"totalDocs\": 13,\n        \"limit\": 10,\n        \"totalPages\": 2,\n        \"page\": 2,\n        \"pagingCounter\": 11,\n        \"hasPrevPage\": true,\n        \"hasNextPage\": false,\n        \"prevPage\": 1,\n        \"nextPage\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "test",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/v1/users/qrcode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"qrcode"
+							],
+							"query": [
+								{
+									"key": "select",
+									"value": "_id, firstName",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Users",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/v1/users/?page=2&limit=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1160"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"488-ScH1dtDYfQCg4zBXLnMd4aiPmM8\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 13 Aug 2023 22:40:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"users\": {\n        \"docs\": [\n            {\n                \"_id\": \"64d91e606d94c0afb54a2a64\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199910\",\n                \"email\": \"ali10@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:08.502Z\",\n                \"updatedAt\": \"2023-08-13T18:18:08.502Z\"\n            },\n            {\n                \"_id\": \"64d91e686d94c0afb54a2a66\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199911\",\n                \"email\": \"ali11@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:16.573Z\",\n                \"updatedAt\": \"2023-08-13T18:18:16.573Z\"\n            },\n            {\n                \"_id\": \"64d91e716d94c0afb54a2a68\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199913\",\n                \"email\": \"ali13@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:25.353Z\",\n                \"updatedAt\": \"2023-08-13T18:18:25.353Z\"\n            }\n        ],\n        \"totalDocs\": 13,\n        \"limit\": 10,\n        \"totalPages\": 2,\n        \"page\": 2,\n        \"pagingCounter\": 11,\n        \"hasPrevPage\": true,\n        \"hasNextPage\": false,\n        \"prevPage\": 1,\n        \"nextPage\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "resend email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"aliahmedfathi1999@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localURL}}/auth/resendEmail",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"resendEmail"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Users",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:4000/api/v1/users/?page=2&limit=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"v1",
+										"users",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1160"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"488-ScH1dtDYfQCg4zBXLnMd4aiPmM8\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 13 Aug 2023 22:40:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"users\": {\n        \"docs\": [\n            {\n                \"_id\": \"64d91e606d94c0afb54a2a64\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199910\",\n                \"email\": \"ali10@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:08.502Z\",\n                \"updatedAt\": \"2023-08-13T18:18:08.502Z\"\n            },\n            {\n                \"_id\": \"64d91e686d94c0afb54a2a66\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199911\",\n                \"email\": \"ali11@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:16.573Z\",\n                \"updatedAt\": \"2023-08-13T18:18:16.573Z\"\n            },\n            {\n                \"_id\": \"64d91e716d94c0afb54a2a68\",\n                \"firstName\": \"ali\",\n                \"lastName\": \"sadasd\",\n                \"userName\": \"aliahmed199913\",\n                \"email\": \"ali13@gmail.com\",\n                \"pImage\": \"https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png\",\n                \"verified\": false,\n                \"role\": \"user\",\n                \"createdAt\": \"2023-08-13T18:18:25.353Z\",\n                \"updatedAt\": \"2023-08-13T18:18:25.353Z\"\n            }\n        ],\n        \"totalDocs\": 13,\n        \"limit\": 10,\n        \"totalPages\": 2,\n        \"page\": 2,\n        \"pagingCounter\": 11,\n        \"hasPrevPage\": true,\n        \"hasNextPage\": false,\n        \"prevPage\": 1,\n        \"nextPage\": null\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update User API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTBjMWE3MDcwMDg3MGU2NGI1ZjNiNzIiLCJlbWFpbCI6ImFsaWFobWVkZmF0aGlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjk3NjM0MzQwLCJleHAiOjE2OTgyMzkxNDB9.1usnUrpfIkV4LNj6qtwkdB-MIF6zt-4wYIPlc49nC0I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Youssef",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{localURL}}/users/",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTBjMWE3MDcwMDg3MGU2NGI1ZjNiNzIiLCJlbWFpbCI6ImFsaWFobWVkZmF0aGlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjk3NjM0MzQwLCJleHAiOjE2OTgyMzkxNDB9.1usnUrpfIkV4LNj6qtwkdB-MIF6zt-4wYIPlc49nC0I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/auth/activate?email=aliahmedfathi1999@gmail.com",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "aliahmedfathi1999@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User API",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/users/652a970ef41eb3b6c7bee921",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"users",
+								"652a970ef41eb3b6c7bee921"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTI1MzhkNTM4ODE0YTM5ZGFiZTg2ZDgiLCJlbWFpbCI6ImZhdGhpMUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTcwMDY5NDUyMCwiZXhwIjoxNzAxMjk5MzIwfQ.qHz--zPziPiXzB3wI25vdr2FZ1n_pJM_g3zy9MODkIE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/users/650c1a70700870e64b5f3b72",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"users",
+								"650c1a70700870e64b5f3b72"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/auth/profile",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search on user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/users/search?searchValue=ali&searchField=userName&page=0&limit=5&sort=-createdAt",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "Fathi",
+									"disabled": true
+								},
+								{
+									"key": "searchValue",
+									"value": "ali"
+								},
+								{
+									"key": "searchField",
+									"value": "userName"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "sort",
+									"value": "-createdAt"
+								},
+								{
+									"key": "select",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTBjMWE3MDcwMDg3MGU2NGI1ZjNiNzIiLCJlbWFpbCI6ImFsaWFobWVkZmF0aGlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTcxNzg0NDUwNCwiZXhwIjoxNzE3OTMwOTA0fQ.g3TCTZ948kdWfCP6L5JcukB0rCllPXzM7gschouf1pI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{localURL}}/auth/refresh-token",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTBjMWE3MDcwMDg3MGU2NGI1ZjNiNzIiLCJlbWFpbCI6ImFsaWFobWVkZmF0aGlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTcxNzg0ODU1OSwiZXhwIjoxNzE3ODQ4NjA5fQ.G-rc1Uk2kvqPuNsEWpODR6pg33MfQsEAYJ2d-gh0r4U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTBjMWE3MDcwMDg3MGU2NGI1ZjNiNzIiLCJlbWFpbCI6ImFsaWFobWVkZmF0aGlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwidmVyaWZpZWQiOnRydWUsImlhdCI6MTcxNzg0NDUwNCwiZXhwIjoxNzE3OTMwOTA0fQ.g3TCTZ948kdWfCP6L5JcukB0rCllPXzM7gschouf1pI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{localURL}}/auth/logout",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Without upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Ali\",\n    \"lastName\":\"Test\",\n    \"userName\": \"alitest\",\n    \"email\": \"alitest@gmail.com\",\n    \"password\": \"@iti430S\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localURL}}/auth/register",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts APIs",
+			"item": [
+				{
+					"name": "Create Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"title 7\",\n    \"content\": \"content 7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localURL}}/posts/",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"title updated successfully\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localURL}}/posts/6666d164c6f3fd4afecfae0f",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"posts",
+								"6666d164c6f3fd4afecfae0f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Posts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localURL}}/posts/",
+							"host": [
+								"{{localURL}}"
+							],
+							"path": [
+								"posts",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "select",
+									"value": "_id, firstName",
+									"disabled": true
+								},
+								{
+									"key": "filter",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "123",
+								"type": "text"
+							},
+							{
+								"key": "x-api-key",
+								"value": "123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"test1\": 121,\n    \"password\": 12,\n    \"test2\": 121\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/test?s=ali",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"test"
+							],
+							"query": [
+								{
+									"key": "s",
+									"value": "ali"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "test Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"John Doe\",\n    \"phoneNumber\": \"01112345678\",\n    \"email\": \"john.doe@gmail.com\",\n    \"gender\": \"M\",\n    \"militaryStatus\": \"Completed\",\n    \"age\": 25,\n    \"reviews\": [\n        {\n            \"rating\": 4.5,\n            \"comment\": \"Great service!\"\n        },\n        {\n            \"rating\": 3.8,\n            \"comment\": \"Good, but can improve.\"\n        }\n    ],\n    \"profilePicture\": \"\",\n    \"profileFileName\": \"\",\n    \"isVerified\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/testParams/Fashions?limit=1001&page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"testParams",
+								"Fashions"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1001"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
