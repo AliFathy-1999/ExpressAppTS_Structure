@@ -31,12 +31,14 @@ export const handleResponseError = (err: any, req: Request, res: Response, next:
   }
   err.statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
   err.status = err.status || 'failed';
-
+  
   res.status(err.statusCode).json({ message: err.message, status: err.status });
-
+  
   //Don't log any error in case of validation error or token error
   if(err.status !== ErrorType.VALIDATION && err.status !== ErrorType.JWT){
-    errorLogger({ req,res })
+    const currentTime = Date.now();
+    const elapsed = currentTime - req.requestDate
+    errorLogger({ req,res,elapsed })
   }
 };
 
