@@ -4,7 +4,6 @@ import  morgan from 'morgan';
 import helmet from 'helmet';
 import sanitizer from 'express-sanitizer';
 import cookieParser from 'cookie-parser';
-
 import  limiter from './utils/rate-limiter'
 import {ApiError, handleResponseError} from './lib/index'
 import swaggerSpec from './utils/swagger'; // Import your swaggerSpec
@@ -28,12 +27,12 @@ const jsonFuncOverride = function (this: CustomResponse, body: any) {
 
 app.response.json = jsonFuncOverride;
 
-app.use((req, res, next) => {
+app.use((req:Request, res:Response, next:NextFunction) => {
     const requestDate = Date.now();
-    console.log('requestDate:', new Date().getMilliseconds())
     req.requestDate = requestDate;
     next();
 });
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
@@ -42,7 +41,6 @@ app.use(helmet());
 app.use(limiter);
 app.use(sanitizer());
 app.use(cookieParser());
-
 //SSR 
 app.set('view engine', 'ejs');
 app.set('templates', path.join(__dirname, 'templates'));
