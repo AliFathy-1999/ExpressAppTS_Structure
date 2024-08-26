@@ -45,6 +45,7 @@ interface IloggerParams {
     res?:Response;
     serviceName?:string;
     elapsed?: number;
+    errorObj?: { [key:string] : any }
 }
 
 export { 

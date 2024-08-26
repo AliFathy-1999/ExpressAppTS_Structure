@@ -110,10 +110,12 @@ const logger: Logger = createLogger({
 const errorLogger = (arg: string | IloggerParams, source: string = process.env.SERVER_NAME ) => {
     if (typeof arg === 'string') {
         logger.error({ message: arg, source });
-    }else {
+    }else if(typeof arg === "object" && source == process.env.SERVER_NAME){
         const { req, res, serviceName, elapsed } = arg as any
         const logsObjData = createLogData(req, res, serviceName, elapsed);
         logger.error(logsFormat(logsObjData));
+    }else {
+        logger.error({ ...arg.errorObj, source })
     }
 }
 const warnLogger = (message: string, source: string = process.env.SERVER_NAME) => {
@@ -139,8 +141,8 @@ const criticalLogger = (message:string, source: string = process.env.SERVER_NAME
     logger.crit({ source, message });
 }
 
-const debugLogger = (message:string) => {
-    logger.debug(message );
+const debugLogger = (message:string | Object ) => {
+    logger.debug(message);
 }
 
 if (environment !== 'production') {
