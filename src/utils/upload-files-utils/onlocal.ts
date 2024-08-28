@@ -8,7 +8,7 @@ import config from '../../config';
 import { ApiError } from '../../lib';
 import errorMsg from '../messages/errorMsg';
 import { StatusCodes } from 'http-status-codes';
-import { createFolderIfNotExists } from '../utils-functions';
+import { createFolderIfNotExists } from '../index';
 
 const { 
   uploadedFile : { allowedFileExtension, limits }

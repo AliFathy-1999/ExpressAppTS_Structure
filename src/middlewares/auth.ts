@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { ApiError } from '../lib';
 
 import { IUser, Role } from '../interfaces/user';
-import { verifyToken } from '../utils/utils-functions';
+import { verifyToken } from '../utils';
 import errorMsg from '../utils/messages/errorMsg';
 import { UnauthenticatedError, UnauthorizedError } from '../lib/apiError';
 

@@ -13,10 +13,9 @@ const {
 } = config.uploadConfig
 
 
-const fileFilter = (req:Request, file : any, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
+const fileFilter = async (req:Request, file : any, callback: (error: ApiError | null, acceptFile: boolean) => void) => {   
   const fileType = file.mimetype.split("/")[0]
   const mediaTypeName = file.mimetype.split("/")[1]
-  console.log(mediaTypeName);
   
   // if ( fileType !== "image" || mediaTypeName !== "pdf") {
   //     return callback(new ApiError(errorMsg.ImageOnly, StatusCodes.UNSUPPORTED_MEDIA_TYPE), null);
@@ -33,6 +32,6 @@ const uploadStatus = type === 'multer-cloudinary' ? cloudinaryFileUpload : local
 
 // const upload = uploadStatus.single("pImage"); 
 
-const upload = uploadStatus.array('pImage', 4)
+const upload = uploadStatus.array('pImage', 1)
 
 export { upload, fileFilter } ;

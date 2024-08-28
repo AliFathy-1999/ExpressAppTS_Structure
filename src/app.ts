@@ -4,7 +4,7 @@ import  morgan from 'morgan';
 import helmet from 'helmet';
 import sanitizer from 'express-sanitizer';
 import cookieParser from 'cookie-parser';
-import  limiter from './utils/rate-limiter'
+import  limiter from './middlewares/rate-limiter'
 import {ApiError, handleResponseError} from './lib/index'
 import swaggerSpec from './utils/swagger'; // Import your swaggerSpec
 const swaggerUi = require('swagger-ui-express');
@@ -12,7 +12,7 @@ const swaggerUi = require('swagger-ui-express');
 import router from './routes/index'
 import errorMsg from "./utils/messages/errorMsg";
 import path from "path";
-import { setSuccessFlag } from "./utils/utils-functions";
+import { setSuccessFlag } from "./utils";
 import { CustomResponse } from "./interfaces/utils.interface";
 import { NotFoundError } from "./lib/apiError";
 

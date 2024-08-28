@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import successMsg from '../utils/messages/successMsg';
 import errorMsg from '../utils/messages/errorMsg';
 
-import { generateToken, hashText } from '../utils/utils-functions';
+import { generateToken, hashText } from '../utils';
 import { userServices } from '../services';
 import { StatusCodes } from 'http-status-codes';
 import renderTemplate from '../utils/renderTemplate';
@@ -64,8 +64,8 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
         // const images : IFiles = req.files as IFiles;
 
         const images = req.files as Express.Multer.File[];
-        if (req.files?.length === 1) 
-            throw new BadRequestError(errorMsg.fileCount(1));
+        // if (req.files?.length === 1) 
+        //     throw new BadRequestError(errorMsg.fileCount(1));
         const pImage : Array<string> = images?.map((file)=> file.filename)
 
         // req.file? req['files'].filename : undefined    
@@ -80,9 +80,12 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
 
         const user = await userServices.createUserService({ firstName, lastName, userName, email, password, pImage, role, activaredToken: token });
         
-        if(!user) throw new BadRequestError(errorMsg.customMsg('Error in user registration'));
         const emailTemplate = await renderTemplate({ firstName, token }, 'activateAccount') 
-        await sendEmail( email, emailBody.subject, emailTemplate);
+        if(process.env.MOCK_MODE == "1"){
+            const x = await sendEmail( email, emailBody.subject, emailTemplate);
+            console.log('x:', x)
+        }
+        if(!user) throw new BadRequestError(errorMsg.customMsg('Error in user registration'));
 
         res.status(StatusCodes.CREATED).json({
             message: successMsg.signUp(user.userName),

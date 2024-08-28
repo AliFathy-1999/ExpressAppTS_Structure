@@ -3,7 +3,7 @@ const { combine, timestamp, label, prettyPrint, json } = format;
 
 import config from "../config";
 import { Request, Response } from 'express';
-import { orderObject, removeFalsyValues, removeSensitiveData } from './utils-functions';
+import { orderObject, removeFalsyValues, removeSensitiveData } from './data.utils';
 import IP from 'ip';
 import moment from 'moment';
 import { IinfoLogger, IloggerParams } from '../interfaces/utils.interface';

@@ -8,7 +8,7 @@ import errorMsg from '../utils/messages/errorMsg';
 import { StatusCodes } from 'http-status-codes';
 
 import { commonService, userServices } from '../services';
-import {generateQRCode  } from '../utils/utils-functions';
+import {generateQRCode  } from '../utils';
 import sendEmail from '../utils/sendEmail';
 import renderTemplate from '../utils/renderTemplate';
 import { BadRequestError, NotFoundError } from '../lib/apiError';
