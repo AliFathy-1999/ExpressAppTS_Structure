@@ -8,6 +8,7 @@ import config from '../../config';
 import { ApiError } from '../../lib';
 import errorMsg from '../messages/errorMsg';
 import { StatusCodes } from 'http-status-codes';
+import { createFolderIfNotExists } from '../utils-functions';
 
 const { 
   uploadedFile : { allowedFileExtension, limits }
@@ -16,6 +17,7 @@ const uploadsFolderPath = path.join(__dirname, '../../../uploads');
 const imagesFolderPath = path.join(uploadsFolderPath, '/uploaded-images');
 const pdfsFolderPath = path.join(uploadsFolderPath, '/uploaded-pdfs');
 
+createFolderIfNotExists([uploadsFolderPath,imagesFolderPath,pdfsFolderPath])
 // Define functions for destination and filename
 
 const filesDestination = (req: Request, file: Express.Multer['File'], callback: (error: Error | null, destination: string) => void) => {

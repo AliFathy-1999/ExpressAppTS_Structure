@@ -10,6 +10,8 @@ import moment from 'moment';
 import { CustomResponse, splitCharacterType } from '../interfaces/utils.interface';
 import { parse, stringify } from 'circular-json';
 import { Response } from 'express';
+import fs from 'fs';
+import { infoLogger } from './logger';
 
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex').substring(0,20);
@@ -152,6 +154,19 @@ const setSuccessFlag = (res: CustomResponse, body: any) => {
     return body;
 };
 
+const createFolderIfNotExists = (foldersPath: Array<string>) => {
+    if(foldersPath.length !=0 ){    
+        foldersPath?.forEach((folderPath) => {
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath, { recursive: true });
+                infoLogger(`Folder created: ${folderPath}`)
+            } else {
+                infoLogger(`Folder already exists: ${folderPath}`);
+            }
+    });
+    }
+};
+
 export {
     hashText,
     generateToken,
@@ -168,5 +183,6 @@ export {
     removeFalsyValues,
     orderObject,
     removeSensitiveData,
-    setSuccessFlag
+    setSuccessFlag,
+    createFolderIfNotExists
 }
