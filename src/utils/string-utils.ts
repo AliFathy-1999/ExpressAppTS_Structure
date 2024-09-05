@@ -1,4 +1,5 @@
 import { splitCharacterType } from "../interfaces/utils.interface";
+import * as cheerio from 'cheerio';
 
 const trimText = (text:string) => {
     return text.replace(/\s+/g, ' ');
@@ -19,9 +20,17 @@ const replaceEngDigitsToArDigits = (str:string | number) => str.toString().repla
 
 const concatenateText = (groupOfText:Array<string>,splitedCharacter:splitCharacterType = " "): string => groupOfText.map(text => text.trim()).join(splitedCharacter);
 
+const extractDataFromHTML = (htmlBody:string, extractBy:string) => {
+    const $ = cheerio.load(htmlBody);
+    const bodyText = $('body').text(); //Extract text from html body
+    const match = bodyText.match(extractBy);
+    return match ? match[1] : null;
+}
+
 export {
     trimText,
     InsertSplitCharInMiddle,
     concatenateText,
-    replaceEngDigitsToArDigits
+    replaceEngDigitsToArDigits,
+    extractDataFromHTML
 }

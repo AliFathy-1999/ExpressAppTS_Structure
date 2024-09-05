@@ -2,7 +2,8 @@ import {
     InsertSplitCharInMiddle,
     concatenateText,
     replaceEngDigitsToArDigits,
-    trimText
+    trimText,
+    extractDataFromHTML
 } from './string-utils';
 import {
     generateOTP,
@@ -17,7 +18,7 @@ import {
 import {
     orderObject,
     removeFalsyValues,
-    removeSensitiveData
+    removeSensitiveData,
 } from './data.utils';
 import {
     generateQRCode,
@@ -33,18 +34,25 @@ export {
     concatenateText,
     replaceEngDigitsToArDigits,
     trimText,
+    extractDataFromHTML,
+
+
     generateOTP,
     hashText,
     generateToken,
     verifyToken,
+
     formatDate,
     formatDateLocale,
+
     orderObject,
     removeFalsyValues,
     removeSensitiveData,
+
     generateQRCode,
     handleStringifyValueResponse,
     setSuccessFlag,
+
     createFolderIfNotExists
 }
 
