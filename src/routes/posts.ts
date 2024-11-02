@@ -7,9 +7,10 @@ import { postsValidator } from '../Validation';
 import clearCacheMW from '../middlewares/clearCache';
 
 const router = Router();
-
-router.post('/',checkUserAuthenticated,userAuth,  validate(postsValidator.createPost),clearCacheMW, asyncWrapper(postController.createPost))
-router.patch('/:id', checkUserAuthenticated,validate(postsValidator.updatePost), clearCacheMW, asyncWrapper(postController.updatePost))
+//clearCacheMW
+router.post('/',checkUserAuthenticated,userAuth,  validate(postsValidator.createPost), asyncWrapper(postController.createPost))
+//clearCacheMW
+router.patch('/:id', checkUserAuthenticated,validate(postsValidator.updatePost), asyncWrapper(postController.updatePost))
 router.get('/', checkUserAuthenticated, userAuth, asyncWrapper(postController.getPosts))
 
 export default router;
