@@ -4,7 +4,7 @@ const { combine, timestamp, label, prettyPrint, json } = format;
 import config from "../config";
 import { Request, Response } from 'express';
 import { orderObject, removeFalsyValues, removeSensitiveData } from './data.utils';
-import IP from 'ip';
+
 import moment from 'moment';
 import { IinfoLogger, IloggerParams } from '../interfaces/utils.interface';
 const { app: { environment } } = config;
@@ -17,7 +17,7 @@ let logsObjData: IinfoLogger = {
         endPoint: "",
         url: "",
         method: "",
-        IPAddress: IP.address(),
+        IPAddress: "",
         headers: {},
         params: {},
         query: {},
@@ -45,7 +45,7 @@ const createLogData = (req: Request, res: Response, serviceName?: string, elapse
             query: req.query,
             params: req.params,
             body: req.body,
-            IPAddress: IP.address(),
+            IPAddress: req.ip,
             userId: req.user?._id || null,
         }),
         Response: removeFalsyValues({
