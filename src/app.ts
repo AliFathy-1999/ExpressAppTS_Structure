@@ -3,7 +3,9 @@ import cors from "cors";
 import  morgan from 'morgan';
 import helmet from 'helmet';
 import sanitizer from 'express-sanitizer';
+import session from 'express-session'
 import cookieParser from 'cookie-parser';
+
 import  limiter from './middlewares/rate-limiter'
 import {ApiError, handleResponseError} from './lib/index'
 import swaggerSpec from './utils/swagger'; // Import your swaggerSpec
@@ -12,10 +14,10 @@ const swaggerUi = require('swagger-ui-express');
 import router from './routes/index'
 import errorMsg from "./utils/messages/errorMsg";
 import path from "path";
-import { setSuccessFlag } from "./utils";
+import { hashText, setSuccessFlag } from "./utils";
 import { CustomResponse } from "./interfaces/utils.interface";
 import { NotFoundError } from "./lib/apiError";
-
+import  { nanoid }  from "nanoid";
 const app : Express = express();
 
 const originalResJSON = app.response.json;
@@ -32,6 +34,19 @@ app.use((req:Request, res:Response, next:NextFunction) => {
     req.requestDate = requestDate;
     next();
 });
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    genid: function() {
+        return nanoid()
+    },
+    cookie: { 
+        maxAge: 1000 * 60 * 60, // Expires after 60 minutes
+        httpOnly: true,
+        secure: true,
+    } 
+}));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
