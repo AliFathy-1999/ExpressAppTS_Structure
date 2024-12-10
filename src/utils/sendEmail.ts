@@ -1,6 +1,8 @@
 
 import SGmail, { MailDataRequired } from '@sendgrid/mail'
 import { config } from "dotenv";
+import { ApiError } from '../lib';
+import { errorLogger, infoLogger } from './logger';
 config();
 const { SENDER_EMAIL, SENDGRID_API_KEY, WEBSITE_NAME } = process.env;
 SGmail.setApiKey(SENDGRID_API_KEY);
@@ -13,9 +15,11 @@ const sendEmail = async (toEmail: string, subject: string, htmlContent: string) 
             subject: subject,
             html: htmlContent
         }
-        await SGmail.send(msg);
+        const emailRequest = await SGmail.send(msg);
+        if(emailRequest[0].statusCode === 202) infoLogger(`subject: ${subject}, mail sent successfully to this email ${toEmail}`)
     } catch (error) {
-        throw new Error('Failed to send email');
+        errorLogger(`Failed to send email: ${JSON.stringify(error)}`, "Email")
+        throw new ApiError("Failed to send email",error.code);
     }
 }
 
