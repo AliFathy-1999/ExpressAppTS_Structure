@@ -4,25 +4,25 @@ import successMsg from '../utils/messages/successMsg';
 import errorMsg from '../utils/messages/errorMsg';
 
 import { generateToken, hashText } from '../utils';
-import { userServices } from '../services';
+import { authService, userServices } from '../services';
 import { StatusCodes } from 'http-status-codes';
 import renderTemplate from '../utils/renderTemplate';
 import sendEmail from '../utils/sendEmail';
-import { IUserPayload, TOKEN_TYPE } from '../interfaces/user';
-import jwt from 'jsonwebtoken';
+import { IUser, IUserPayload, TOKEN_TYPE } from '../interfaces/user';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { cacheOption } from '../interfaces/utils.interface';
 import { BadRequestError, ConflictError, UnauthenticatedError, UnauthorizedError } from '../lib/apiError';
+import bcryptjs from 'bcryptjs';
+import { generateActivationToken } from '../utils/token-utils';
 
 
 const signIn = async (req:Request, res:Response, next:NextFunction) => {
         const { body : { email, password }} = req
         const user = await userServices.getUserService({email});
-        
-        if (!user) throw new UnauthenticatedError(errorMsg.IncorrectField('Email'));
+        if (!user) throw new UnauthenticatedError(errorMsg.IncorrectField('Email or Password'));
     
-        
-        const passwordMatch = await user.comparePassword(password);
-        if (!passwordMatch) throw new UnauthenticatedError(errorMsg.IncorrectField('Password'));        
+        const isPasswordValid = await user.comparePassword(password);
+        if (!isPasswordValid) throw new UnauthenticatedError(errorMsg.IncorrectField('Password or Password'));        
         
         const userPayload: IUserPayload = {
             userId: String(user._id),
@@ -66,25 +66,23 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
         const images = req.files as Express.Multer.File[];
         // if (req.files?.length === 1) 
         //     throw new BadRequestError(errorMsg.fileCount(1));
-        const pImage : Array<string> = images?.map((file)=> file.filename)
+        const pImage : Array<string> = images?.map((file)=> file.filename) 
 
         // req.file? req['files'].filename : undefined    
 
-        const { firstName, lastName, userName, email, password, role } = req.body;
+        const { firstName, lastName, userName, email, password, role } = req.body as Partial<IUser>;
         const emailBody = {
             subject: 'Activate Your Email',
             text: 'Activate Your Email',
         }
         //Send Email
-        const token = hashText(email);
-
-        const user = await userServices.createUserService({ firstName, lastName, userName, email, password, pImage, role, activaredToken: token });
-        
+        const token = generateActivationToken(email);
         const emailTemplate = await renderTemplate({ firstName, token }, 'activateAccount') 
         if(process.env.MOCK_MODE == "1"){
-            const x = await sendEmail( email, emailBody.subject, emailTemplate);
-            console.log('x:', x)
+            await sendEmail( email, emailBody.subject, emailTemplate);
         }
+        const user = await userServices.createUserService({ firstName, lastName, userName, email, password, pImage, role, activatedToken: token });
+        
         if(!user) throw new BadRequestError(errorMsg.customMsg('Error in user registration'));
 
         res.status(StatusCodes.CREATED).json({
@@ -102,13 +100,17 @@ const getProfile =async (req:Request, res:Response, next:NextFunction) => {
     })
 }
 const activateAccount = async (req:Request, res:Response, next:NextFunction) => {
-    const { email } = req.query;
     const { token } = req.params;
     if(!token) throw new BadRequestError(errorMsg.IncorrectField('Token'));
+    const decoded: JwtPayload = jwt.verify(token, process.env.SECRET_KEY) as JwtPayload;
+    const { email } = decoded;
     if(!email) throw new BadRequestError(errorMsg.IncorrectField('Email'));
+    const user = await userServices.getUserService({email});
+    if(!user) throw new BadRequestError(errorMsg.NotFound('User',`${email}`,'Email'));
+    if(user.verified) throw new ConflictError(errorMsg.userAlreadyVerified);
 
     const updateUser = await userServices.updateUserService( { email, activaredToken: token }, { verified: true });
-    if(!updateUser) throw new BadRequestError(errorMsg.NotFound('User',`${email}`,'Email'));
+    if(!updateUser) throw new BadRequestError(errorMsg.failedTo('update','user'))
     res.status(StatusCodes.ACCEPTED).json({
         message: successMsg.activateAccount(email as string),
         data : updateUser
@@ -121,16 +123,35 @@ const resendEmail = async (req:Request, res:Response, next:NextFunction) => {
     if(!user) throw new BadRequestError(errorMsg.NotFound('User',`${email}`,'Email'));
     if(user.verified === true) throw new ConflictError(errorMsg.userAlreadyVerified);
     const emailBody = {
-        subject: 'Activate Your Email',
+        subject: 'Resend mail for activate your email',
         text: 'Activate Your Email',
     }
-    const emailTemplate = await renderTemplate({ firstName: user.firstName, email }, 'activateAccount') 
+    const token = generateActivationToken(email);
+    const emailTemplate = await renderTemplate({ firstName: user.firstName, email, token }, 'activateAccount') 
     await sendEmail( email, emailBody.subject, emailTemplate);
     res.status(StatusCodes.OK).json({
         message: successMsg.resendEmail(email),
     })
 }
+const resetPassword = async (req:Request,res:Response,next:NextFunction) => {
+    const { body: { oldPassword, newPassword }, user: { email } } = req;
+    const user = await userServices.getUserService({ email });
+    if(!user) throw new BadRequestError("User not found")
+    const isMatch = await authService.checkPassword(user.password,oldPassword);
+    if(!isMatch) throw new UnauthorizedError("Invalid password, please enter valid old password");
+    const oldPasswordMatchNewPassword = await authService.checkPassword(user.password,newPassword);
+    if(oldPasswordMatchNewPassword) throw new UnauthorizedError("New password cannot be the same as old password");
+    const newHashPassword = await bcryptjs.hash(newPassword, 10);
+    console.log('newHashPassword:', newHashPassword)
+    console.log('email:', email)
+    const updateUser = await userServices.updateUserService({email}, {password: newHashPassword});
+    console.log('updateUser:', updateUser)
+    if(!updateUser) throw new BadRequestError("Error while updating password, please try again!")
+    res.status(StatusCodes.OK).json({
+        message: successMsg.resetPassword,
+    })
 
+}
 export default {
     register,
     signIn,
@@ -138,5 +159,6 @@ export default {
     activateAccount,
     resendEmail,
     refreshAccessToken,
-    logout
+    logout,
+    resetPassword
 }

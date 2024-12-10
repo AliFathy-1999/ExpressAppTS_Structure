@@ -38,10 +38,20 @@ const cloudinaryFileUpload = multer({
   limits
 });
 
-const removeImage = async(url:string) =>{
-  const publicId = extractPublicId(url);
-  if(url === 'https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png') return;
-  cloudinary.uploader.destroy(publicId, { resource_type : 'image'})
+const removeImage = async(url:string | Array<string>) =>{
+  let publicId = null;
+  if(typeof url == "string"){
+    publicId = extractPublicId(url)
+    if(url === 'https://res.cloudinary.com/dttgbrris/image/upload/v1681003634/3899618_mkmx9b.png') return;
+      cloudinary.uploader.destroy(publicId, { resource_type : 'image'})
+
+  }
+  if(Array.isArray(url)){
+    url.forEach((item) => {
+      publicId = extractPublicId(item)
+      cloudinary.uploader.destroy(publicId, { resource_type : 'image'})
+    })
+  }
 }
 
 export { cloudinaryFileUpload, removeImage };

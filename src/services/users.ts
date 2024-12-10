@@ -8,7 +8,7 @@ const getUserService = async (filterBy: { [key:string] : any},cacheFlag: cacheOp
     return await User.findOne(filterBy)
 }; 
 
-const createUserService = async (userData: { [key:string] : any}) : Promise<IUser>=> await User.create(userData);
+const createUserService = async (userData: Partial<IUser>) : Promise<IUser>=> await User.create(userData);
 
 const updateUserService = async (filterBy: { [key:string] : any}, updateData: { [key:string] : any}) : Promise<IUser> => await User.findOneAndUpdate(filterBy, updateData, {runValidation: true, new : true});
 

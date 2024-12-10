@@ -9,7 +9,9 @@ import errorMsg from './messages/errorMsg';
 const hashText = (text:string) => {
     return crypto.createHash('sha256').update(text).digest('hex').substring(0,20);
 }
-
+const generateActivationToken = (email: string): string => {
+    return jwt.sign({ email }, process.env.EMAIL_SECRET_KEY, { expiresIn: '1h' }); // Token expires in 1 hour
+};
 const generateToken = (user: IUserPayload, tokenType = TOKEN_TYPE.ACCESS_TOKEN)=>{
     const { 
         AUTH_ACCESS_TOKEN_SECRET, AUTH_ACCESS_TOKEN_EXPIRY,
@@ -59,5 +61,6 @@ export {
     hashText,
     generateToken,
     verifyToken,
-    generateOTP
+    generateOTP,
+    generateActivationToken
 }

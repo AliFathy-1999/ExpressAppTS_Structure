@@ -17,7 +17,7 @@ const errorMsg = {
     unAuthenticated: 'unauthenticated access',
     unverifiedUser: 'unverified user, please verify your account first and try again',
     userAlreadyVerified: 'user already verified, please sign in',
-
+    failedTo: (trans: string, model:string) => `Failed to ${trans} ${model}`,
     signInAgain: 'Please sign in again',
 
     customMsg: (msg:string) => msg

@@ -23,7 +23,7 @@ interface IUser extends Document{
     userName: string;
     verified: boolean;
     activatedToken: string;
-    pImage?: string;
+    pImage?: string | Array<string>;
     role: Role;
     comparePassword(password: string): Promise<Boolean>;
 }
