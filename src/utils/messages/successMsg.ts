@@ -7,6 +7,7 @@ const successMsg = {
     signUp: (userName:string) => `${userName} is signed up successfully`,
     activateAccount: (email:string) => `${email} account is verified successfully`,
     resendEmail: (email:string) => `mail sent to ${email} successfully`,
+    resetPassword: 'Your password is reseted successfully',
     customMsg: (msg:string) => msg
 }
 export default successMsg;

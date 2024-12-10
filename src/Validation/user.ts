@@ -55,12 +55,45 @@ const signUp = {
 const signIn = {
     body: Joi.object().keys({
         email: Joi.string().required().trim().email(),
-        password: Joi.string().required().trim(),
+        password: Joi.string()
+        .min(8)
+        .pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/)
+        .messages({
+            'string.empty': 'Password is a required field',
+            'string.min': 'Password must be at least 8 characters',
+            'string.pattern.base': 'Password must contain at least one number , Capital letter and one special character',
+        })
     }),
 };
 
+const resetPassword = {
+    body: Joi.object().keys({
+        oldPassword: Joi.string()
+        .min(8)
+        .pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/)
+        .messages({
+            'string.empty': 'oldPassword is a required field',
+            'string.min': 'oldPassword must be at least 8 characters',
+            'string.pattern.base': 'oldPassword must contain at least one number , Capital letter and one special character',
+        }),
+        newPassword: Joi.string()
+        .min(8)
+        .invalid(Joi.ref('oldPassword'))
+        .pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]/)
+        .messages({
+            'string.empty': 'newPassword is a required field',
+            'string.min': 'newPassword must be at least 8 characters',
+            'string.pattern.base': 'newPassword must contain at least one number , Capital letter and one special character',
+            'any.invalid': 'New password cannot be the same as old password',
+        }),
+        confirmPassword:Joi.string().required().valid(Joi.ref('newPassword')).messages({
+            'any.only': 'Confirm password must be the same as new password',
+        })
+    })
+}
 
 export default {
     signUp,
     signIn,
+    resetPassword
 }

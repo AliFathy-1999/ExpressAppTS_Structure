@@ -14,6 +14,7 @@ router.post('/register', upload, validate(usersValidator.signUp), asyncWrapper(a
 router.post('/login', validate(usersValidator.signIn),asyncWrapper(authController.signIn))
 router.get('/profile', checkUserAuthenticated, asyncWrapper(authController.getProfile))
 router.patch('/activate/:token', asyncWrapper(authController.activateAccount))
+router.patch('/reset-password', checkUserAuthenticated, validate(usersValidator.resetPassword), asyncWrapper(authController.resetPassword))
 router.post('/resendEmail', asyncWrapper(authController.resendEmail))
 router.get('/refresh-token', asyncWrapper(authController.refreshAccessToken))
 router.patch('/logout', checkUserAuthenticated, asyncWrapper(authController.logout))
