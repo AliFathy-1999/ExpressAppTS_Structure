@@ -52,7 +52,19 @@ app.set('templates', path.join(__dirname, 'templates'));
 // })
 app.use('/api/', router);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.get(["/", "/health"], async (req: Request,res:Response,next:NextFunction)=>{
+    const healthcheck = {
+        uptime: process.uptime(),
+        message: 'OK',
+        timestamp: Date.now()
+    };
+    try {
+        res.send(healthcheck);
+    } catch (error) {
+        healthcheck.message = error;
+        res.status(503).send();
+    }
+})
 app.all('*',async (req:Request, res:Response,next:NextFunction) => {
     next(new NotFoundError(errorMsg.RouteNotFound(req.originalUrl)));
 })
